@@ -20,10 +20,6 @@ min_noise=$6
 max_noise=$7
 num_noise_values=$8
 
-min_Mi=$9
-max_Mi=${10}
-num_Mi_values=${11}
-
 min_Jn=${12}
 max_Jn=${13}
 num_Jn_values=${14}
@@ -32,13 +28,9 @@ min_Ji=${15}
 max_Ji=${16}
 num_Ji_values=${17}
 
-min_Wi=${18}
-max_Wi=${19}
-num_Wi_values=${20}
-
-min_We=${21}
-max_We=${22}
-num_We_values=${23}
+min_Wp=${21}
+max_Wp=${22}
+num_Wp_values=${23}
 
 
 # my_G=0.01
@@ -72,11 +64,9 @@ generate_values() {
 # Generate parameter values
 G_values=($(generate_values $min_G $max_G $num_G_values))
 noise_values=($(generate_values $min_noise $max_noise $num_noise_values))
-Mi_values=($(generate_values $min_Mi $max_Mi $num_Mi_values))
 Jn_values=($(generate_values $min_Jn $max_Jn $num_Jn_values))
 Ji_values=($(generate_values $min_Ji $max_Ji $num_Ji_values))
-Wi_values=($(generate_values $min_Wi $max_Wi $num_Wi_values))
-We_values=($(generate_values $min_We $max_We $num_We_values))
+Wp_values=($(generate_values $min_Wp $max_Wp $num_Wp_values))
 
 # Create combinations and write them to the file
 > "$paramfile"  # Clear the file before writing
