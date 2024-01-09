@@ -12,4 +12,4 @@ Ji=${5}
 Wi=${6}
 We=${7}
 
-python single_sim_runner.py ${noise} ${G} ${Mi} ${Jn} ${Ji} ${Wi} ${We} 
+python single_sim_runner.py ${noise} ${G} ${Jn} ${Ji} ${Wp} 
