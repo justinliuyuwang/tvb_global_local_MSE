@@ -24,23 +24,39 @@ def get_connectivity(scaling_factor):
         conn.speed = np.r_[np.Inf]
         return conn
 
-def process_sub(my_noise,my_G,Mi,Jn,Ji,Wi,We):
+def process_sub(my_noise,my_G,Jn,Ji,Wp):
     
     my_magic=1  # TO EDIT
     my_dt=1.0  # TO EDIT
 
     #start_time = time.time()
     rww = models.DecoBalancedExcInh()
-    if not Mi==0:
-        print("Mi")
-        rww = models.DecoBalancedExcInh(M_i=np.array([Mi]),G=np.array([1.0, ]))
-    elif not Jn==0:
+    if not Jn==0:
         print("Jn")
-        rww = models.DecoBalancedExcInh(J_N=np.array([Jn]),J_i=np.array([Ji]),G=np.array([1.0, ]))
-    elif not Wi==0:
+        rww = models.DecoBalancedExcInh(J_N=np.array([Jn]),G=np.array([1.0, ]))
+        my_noise=0.035
+        my_G=2
+    elif not Ji==0:
         print("Wi")
-        rww = models.DecoBalancedExcInh(W_i=np.array([Wi]),W_e=np.array([We]),G=np.array([1.0, ]))
-
+        rww = models.DecoBalancedExcInh(J_i=np.array([We]),G=np.array([1.0, ]))
+        my_noise=0.035
+        my_G=2
+    elif not Wp==0:
+        print("Wi")
+        rww = models.DecoBalancedExcInh(w_p=np.array([Wp]),G=np.array([1.0, ]))
+        my_noise=0.035
+        my_G=2
+    elif not my_G==0:
+        print("Wi")
+        rww = models.DecoBalancedExcInh(G=np.array([1.0, ]))
+        my_noise=0.035
+        my_G=my_G
+    elif not my_noise==0:
+        print("Wi")
+        rww = models.DecoBalancedExcInh(G=np.array([1.0, ]))
+        my_noise=my_noise
+        my_G=2
+                        
     #my_G=0.01
     #my_noise=1e-5
     #my_dt=1
