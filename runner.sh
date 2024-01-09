@@ -2,8 +2,8 @@
 
 # Check if the correct number of arguments is provided
 if [ "$#" -ne 23 ]; then
-    echo "Usage: $0 paramfile log_directory min_G max_G num_G_values min_noise max_noise num_noise_values min_Mi max_Mi num_Mi_values min_Jn max_Jn num_Jn_values min_Ji max_Ji num_Ji_values min_Wi max_Wi num_Wi_values min_We max_We num_We_values"
-    echo "Example: $0 param.txt /path/to/log_dir 0.01 0.02 3 1e-5 2e-5 3 1.0 1.1 3 1 1 1 1.0 1.5 3 0.15 0.2 3 1.0 1.1 3 0.7 0.8 3 1.0 1.1 3"
+    echo "Usage: $0 paramfile log_directory min_noise max_noise num_noise_values min_G max_G num_G_values min_Jn max_Jn num_Jn_values min_Ji max_Ji num_Ji_values min_Wp max_Wp num_Wp_values"
+    echo "Example: $0 param.txt /path/to/log_dir 1e-5 2e-5 3 0.01 0.02 3 1.0 1.1 3 1 1 1 1.0 1.5 3 "
     exit 1
 fi
 
