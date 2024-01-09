@@ -6,10 +6,8 @@
 
 noise=${1} 
 G=${2}
-Mi=${3}
-Jn=${4}
-Ji=${5}
-Wi=${6}
-We=${7}
+Jn=${3}
+Ji=${4}
+Wp=${5}
 
 python single_sim_runner.py ${noise} ${G} ${Jn} ${Ji} ${Wp} 
