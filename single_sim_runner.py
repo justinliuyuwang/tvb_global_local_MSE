@@ -36,11 +36,9 @@ def main():
     #parser.add_argument("subject", help="The subject parameter")
     parser.add_argument("noise", type=float, help="Noise level")
     parser.add_argument("G", type=float, help="Global coupling parameter")
-    parser.add_argument("Mi", type=float, help="Inhibitory mass parameter")
     parser.add_argument("Jn", type=float, help="Excitatory mass parameter")
     parser.add_argument("Ji", type=float, help="Ji parameter")
-    parser.add_argument("Wi", type=float, help="Wi parameter")
-    parser.add_argument("We", type=float, help="We parameter")
+    parser.add_argument("Wp", type=float, help="Wp parameter")
 
     # Parse arguments
     args = parser.parse_args()
@@ -48,15 +46,17 @@ def main():
 
     # Parameters based on parsed arguments
     parameters = [
-        {"Mi": args.Mi, "Jn": 0, "Ji": 0, "Wi": 0, "We": 0},
-        {"Mi": 0, "Jn": args.Jn, "Ji": args.Ji, "Wi": 0, "We": 0},
-        {"Mi": 0, "Jn": 0, "Ji": 0, "Wi": args.Wi, "We": args.We}
+        {"noise": args.noise,"G": 0,"Jn": 0, "Ji": 0, "Wp": 0},
+        {"noise": 0,"G": args.G,"Jn": 0, "Ji": 0, "Wp": 0},
+        {"noise": 0,"G": 0,"Jn": 0, "Ji": args.Ji, "Wp": 0},
+        {"noise": 0,"G": 0,"Jn": args.Jn, "Ji": 0, "Wp": 0},
+        {"noise": 0,"G": 0,"Jn": 0, "Ji": 0, "Wp": args.Wp}
     ]
 
     # Loop through each set of parameters
     for i, params in enumerate(parameters, start=1):
         # Run the model
-        time, data = model_wongwang.process_sub(args.noise, args.G, **params)
+        time, data = model_wongwang.process_sub(**params)
 
         # Plot and save time series stack
         ax = plot_ts_stack(data[1*1000:20*1000:10, 0, :, 0], x=time[1*1000:20*1000:10]/1000., width=20)
