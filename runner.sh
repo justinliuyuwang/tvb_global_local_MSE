@@ -99,32 +99,9 @@ for Wp in "${Wp_values[@]}"; do
     echo "0 0 0 0 $Wp" >> "$paramfile"
 done
 
-                
-for my_G in "${G_values[@]}"; do
-    for my_noise in "${noise_values[@]}"; do
-                # Varying Mi
-                for Mi in "${Mi_values[@]}"; do
-                    echo "$my_G $my_noise $Mi 0 0 0 0" >> "$paramfile"
-                done
-
-                # Varying Jn and Ji separately
-                for Jn in "${Jn_values[@]}"; do
-                    for Ji in "${Ji_values[@]}"; do
-                        echo "$my_G $my_noise 0 $Jn $Ji 0 0" >> "$paramfile"
-                    done
-                done
-
-                # Varying Wi and We separately
-                for Wi in "${Wi_values[@]}"; do
-                    for We in "${We_values[@]}"; do
-                        echo "$my_G $my_noise 0 0 0 $Wi $We" >> "$paramfile"
-                    done
-                done
-            done
-done
 
 # Read subjects and parameter combinations, then submit batch jobs
     while read -r my_noise my_G Jn Ji Wp; do
-        sbatch -J "params_sim_G-${my_G}_noise-${my_noise}_Mi-${Mi}_Jn-${Jn}_Ji-${Ji}_Wi-${Wi}_We-${We}" -o "${log_directory}/params_sim_G-${my_G}_noise-${my_noise}_Mi-${Mi}_Jn-${Jn}_Ji-${Ji}_Wi-${Wi}_We-${We}.out" "sbatch.sh" "${my_G}" "${my_noise}" "${Mi}" "${Jn}" "${Ji}" "${Wi}" "${We}"
+        sbatch -J "params_sim_noise-${my_noise}_G-${my_G}_Jn-${Jn}_Ji-${Ji}_Wp-${Wp}" -o "${log_directory}/params_sim_G-${my_G}_noise-${my_noise}_G-${my_G}_Jn-${Jn}_Ji-${Ji}_Wp-${Wp}.out" "sbatch.sh" "${my_noise}" "${my_G}" "${Jn}" "${Ji}" "${Wp}"
     done < "$paramfile"
 
