@@ -1,3 +1,9 @@
+disp(['Noise: ', num2str(noise)]);
+disp(['G: ', num2str(G)]);
+disp(['Jn: ', num2str(Jn)]);
+disp(['Ji: ', num2str(Ji)]);
+disp(['Wp: ', num2str(Wp)]);
+
 % Loop through each ROI
 for roi = 0:75
     % Dynamically create the file path for each ROI
