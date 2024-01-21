@@ -76,7 +76,8 @@ def process_sub(my_noise,my_G,Jn,Ji,Wp):
 
     sim = simulator.Simulator(
         model=rww,
-        connectivity=connectivity.Connectivity.from_file(),
+        #connectivity=connectivity.Connectivity.from_file(),
+        connectivity=get_connectivity(1),
         #coupling=coupling.Linear(a=numpy.array([0.5 / 50.0])),
         coupling=coupling.Linear(a=np.array([my_G])),
         integrator=integrators.EulerStochastic(dt=my_dt, noise=noise.Additive(nsig=np.array([my_noise]))), #1e-5
@@ -88,6 +89,7 @@ def process_sub(my_noise,my_G,Jn,Ji,Wp):
 
 
     (time, data), = sim.run()
+    print(np.shape(time))
     return(time,data)
 
 
