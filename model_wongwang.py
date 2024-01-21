@@ -62,6 +62,11 @@ def process_sub(my_noise,my_G,Jn,Ji,Wp):
         rww = models.DecoBalancedExcInh(G=np.array([1.0, ]))
         my_noise=my_noise
         my_G=2
+    else:
+        print("default")
+        rww = models.DecoBalancedExcInh(G=np.array([1.0, ]))
+        my_noise=0.035
+        my_G=2
                         
     #my_G=0.01
     #my_noise=1e-5
