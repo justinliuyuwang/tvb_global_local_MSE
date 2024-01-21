@@ -12,8 +12,8 @@ colors = ['r', 'g', 'b', 'k']; % Red, Green, Blue, Black
 
 % Prepare to store data for each ROI
 a_values = cell(1, 4);
-b_values = cell(1, 4);
 c_values = cell(1, 4);
+plotHandles = zeros(1, 8); % Array to store plot handles for legend
 
 % Loop through each ROI
 for roi = 0:3
@@ -42,7 +42,6 @@ for roi = 0:3
     % Store the data for plotting later
     [a, b, c] = get_mse_curve_across_trials_matlab(reshaped_middle_rows);
     a_values{roi+1} = a;
-    b_values{roi+1} = b;
     c_values{roi+1} = c;
 end
 
@@ -50,19 +49,19 @@ end
 figure;
 hold on; % Hold on to plot multiple data sets in the same figure
 for roi = 0:3
-    % Plot points
-    plot(c_values{roi+1}, a_values{roi+1}, 'o', 'Color', colors(roi+1));
+    % Plot points and store handle for legend
+    plotHandles(roi*2+1) = plot(c_values{roi+1}, a_values{roi+1}, 'o', 'Color', colors(roi+1));
 
-    % Calculate and plot line of best fit
-    p = polyfit(c_values{roi+1}, a_values{roi+1}, 1); % Linear fit
+    % Calculate and plot curved line of best fit (e.g., quadratic)
+    p = polyfit(c_values{roi+1}, a_values{roi+1}, 2); % Quadratic fit
     xFit = linspace(min(c_values{roi+1}), max(c_values{roi+1}), 100); % 100 points for a smooth line
     yFit = polyval(p, xFit);
-    plot(xFit, yFit, '-', 'Color', colors(roi+1));
+    plotHandles(roi*2+2) = plot(xFit, yFit, '-', 'Color', colors(roi+1));
 end
 hold off;
 
 % Add a legend and title
-legend('ROI 0', 'ROI 1', 'ROI 2', 'ROI 3', 'Location', 'best');
+legend(plotHandles(1:2:end), {'ROI 0', 'ROI 1', 'ROI 2', 'ROI 3'}, 'Location', 'best');
 title('Mean MSE Curves with Best Fit Lines for WW ROIs');
 
 % Save the overlayed plot figure
