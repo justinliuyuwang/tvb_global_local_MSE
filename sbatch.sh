@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --account=rrg-rmcintos
 #SBATCH --mem=8000MB
-#SBATCH --time=0-6:36
+#SBATCH --time=0-3:00
 
 
 noise=${1} 
