@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 from scipy.io import savemat
 import numpy as np
 
-
+def format_float(f):
+    return "{:.6g}".format(f)
 
 def plot_ts_stack(data, x=None, scale=0.9, lw=0.4, c='k', title=None, labels=None, width=48, ax=None, alpha=1.0):
     data = data - np.mean(data, axis=0, keepdims=True)
@@ -48,28 +49,34 @@ def main():
     parameters = [
         {"my_noise": args.noise,"my_G": args.G,"Jn": args.Jn, "Ji": args.Ji, "Wp": args.Wp}
     ]
-
+    
     # Loop through each set of parameters
     for i, params in enumerate(parameters, start=1):
         # Run the model
         time, data = model_wongwang.process_sub(**params)
 
+        formatted_noise = format_float(args.noise)
+        formatted_G = format_float(args.G)
+        formatted_Jn = format_float(args.Jn)
+        formatted_Ji = format_float(args.Ji)
+        formatted_Wp = format_float(args.Wp)
+
         # Plot and save time series stack
         ax = plot_ts_stack(data[1*1000:20*1000:10, 0, :, 0], x=time[1*1000:20*1000:10]/1000., width=20)
         ax.set(xlabel='time [s]')
-        plt.savefig(f"pse_img/ts_allroi_ww_run{i}_noise-{args.noise}_G-{args.G}_Jn-{args.Jn}_Ji-{args.Ji}_Wp-{args.Wp}.png")
-
+        plt.savefig(f"pse_img/ts_allroi_ww_run{i}_noise-{formatted_noise}_G-{formatted_G}_Jn-{formatted_Jn}_Ji-{formatted_Ji}_Wp-{formatted_Wp}.png")
+        
         # Plot and save temporal average
         plt.figure()
         plt.plot(time, data[:, 0, :, 0], 'k', alpha=0.1)
         plt.title("Temporal Average")
-        plt.savefig(f"pse_img/ts_allroi_regplot_ww_run{i}_noise-{args.noise}_G-{args.G}_Jn-{args.Jn}_Ji-{args.Ji}_Wp-{args.Wp}.png")
-
+        plt.savefig(f"pse_img/ts_allroi_regplot_ww_run{i}_noise-{formatted_noise}_G-{formatted_G}_Jn-{formatted_Jn}_Ji-{formatted_Ji}_Wp-{formatted_Wp}.png")
+        
         # Save data for each ROI
         data = data[1000:]
         for roi in range(4):
             eeg = {'eeg': data[:, 0, roi, 0]}
-            savemat(f'pse_img/eeg_roi{roi}_ww_run{i}_noise-{args.noise}_G-{args.G}_Jn-{args.Jn}_Ji-{args.Ji}_Wp-{args.Wp}.mat', eeg)
+            savemat(f'pse_img/eeg_roi{roi}_ww_run{i}_noise-{formatted_noise}_G-{formatted_G}_Jn-{formatted_Jn}_Ji-{formatted_Ji}_Wp-{formatted_Wp}.mat', eeg)
 
 if __name__ == "__main__":
     main()
