@@ -39,34 +39,29 @@ def process_sub(my_noise,my_G,Jn,Ji,Wp):
     rww = models.DecoBalancedExcInh()
     if not Jn==0:
         print("Jn")
-        rww = models.DecoBalancedExcInh(J_N=np.array([Jn]),G=np.array([1.0, ]))
-        my_noise=0.035
-        my_G=2
+        rww = models.DecoBalancedExcInh(J_N=np.array([Jn])))
+        my_noise=1e-5
     elif not Ji==0:
         print("Ji")
-        rww = models.DecoBalancedExcInh(J_i=np.array([Ji]),G=np.array([1.0, ]))
-        my_noise=0.035
-        my_G=2
+        rww = models.DecoBalancedExcInh(J_i=np.array([Ji])))
+        my_noise=1e-5
     elif not Wp==0:
         print("Wp")
-        rww = models.DecoBalancedExcInh(w_p=np.array([Wp]),G=np.array([1.0, ]))
-        my_noise=0.035
-        my_G=2
+        rww = models.DecoBalancedExcInh(w_p=np.array([Wp])))
+        my_noise=1e-5
     elif not my_G==0:
         print("G")
-        rww = models.DecoBalancedExcInh(G=np.array([1.0, ]))
-        my_noise=0.035
-        my_G=my_G
+        rww = models.DecoBalancedExcInh(G=np.array([my_G, ]))
+        my_noise=1e-5
     elif not my_noise==0:
         print("noise")
-        rww = models.DecoBalancedExcInh(G=np.array([1.0, ]))
+        rww = models.DecoBalancedExcInh())
         my_noise=my_noise
-        my_G=2
     else:
         print("default")
-        rww = models.DecoBalancedExcInh(G=np.array([1.0, ]))
+        rww = models.DecoBalancedExcInh())
         my_noise=1e-5
-        my_G=0.02
+
                         
     #my_G=0.01
     #my_noise=1e-5
@@ -79,10 +74,10 @@ def process_sub(my_noise,my_G,Jn,Ji,Wp):
         #connectivity=connectivity.Connectivity.from_file(),
         connectivity=get_connectivity(1),
         #coupling=coupling.Linear(a=numpy.array([0.5 / 50.0])),
-        coupling=coupling.Linear(a=np.array([my_G])),
+        coupling=coupling.Linear(a=np.array([0.00390625])),
         integrator=integrators.EulerStochastic(dt=my_dt, noise=noise.Additive(nsig=np.array([my_noise]))), #1e-5
         monitors=(monitors.TemporalAverage(period=1.),),
-        simulation_length=5e3
+        simulation_length=9e3
     ).configure()
 
     #TODO MAY NEED TO CHANGE HOW get_connectivity gets from file
