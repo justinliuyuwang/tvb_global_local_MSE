@@ -52,17 +52,21 @@ for roi = 0:3
     % Plot points and store handle for legend
     plotHandles(roi*2+1) = plot(c_values{roi+1}, a_values{roi+1}, 'o', 'Color', colors(roi+1));
 
-    % Calculate and plot curved line of best fit (e.g., quadratic)
-    p = polyfit(c_values{roi+1}, a_values{roi+1}, 3); % cubic fit
-    xFit = linspace(min(c_values{roi+1}), max(c_values{roi+1}), 100); % 100 points for a smooth line
+    % Fit a logarithmic curve and plot
+    % Filter out non-positive values since log(x) is undefined for x <= 0
+    positiveIndices = c_values{roi+1} > 0;
+    xLog = log(c_values{roi+1}(positiveIndices));
+    yLog = a_values{roi+1}(positiveIndices);
+    p = polyfit(xLog, yLog, 1); % Linear fit to the transformed data
+    xFit = linspace(min(xLog), max(xLog), 100);
     yFit = polyval(p, xFit);
-    plotHandles(roi*2+2) = plot(xFit, yFit, '-', 'Color', colors(roi+1));
+    plotHandles(roi*2+2) = plot(exp(xFit), yFit, '-', 'Color', colors(roi+1));
 end
 hold off;
 
 % Add a legend and title
 legend(plotHandles(1:2:end), {'ROI 0', 'ROI 1', 'ROI 2', 'ROI 3'}, 'Location', 'best');
-title('Mean MSE Curves with Best Fit Lines for WW ROIs');
+title('Mean MSE Curves with Logarithmic Best Fit Lines for WW ROIs');
 
 % Save the overlayed plot figure
 filename = sprintf(['pse_img/mean_mse_plots_overlay_ww_noise-', formatSpec, '_G-', formatSpec, '_Jn-', formatSpec, '_Ji-', formatSpec, '_Wp-', formatSpec, '.png'], noise, G, Jn, Ji, Wp);
