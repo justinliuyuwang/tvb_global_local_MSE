@@ -46,7 +46,7 @@ def main():
 
     # Parameters based on parsed arguments
     parameters = [
-        {"noise": args.noise,"G": args.G,"Jn": args.Jn, "Ji": args.Ji, "Wp": args.Wp}
+        {"my_noise": args.noise,"my_G": args.G,"Jn": args.Jn, "Ji": args.Ji, "Wp": args.Wp}
     ]
 
     # Loop through each set of parameters
