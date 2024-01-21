@@ -5,7 +5,7 @@ disp(['Ji: ', num2str(Ji)]);
 disp(['Wp: ', num2str(Wp)]);
 
 % Loop through each ROI
-for roi = 0:75
+for roi = 0:4
     % Dynamically create the file path for each ROI
     file_path = sprintf('pse_img/eeg_roi%d_ww_run1_noise%.2f_G%.2f_Jn%.2f_Ji%.2f_Wp%.2f.mat', roi, noise, G, Jn, Ji, Wp);
     
