@@ -67,7 +67,7 @@ def main():
 
         # Save data for each ROI
         data = data[1000:]
-        for roi in range(76):
+        for roi in range(4):
             eeg = {'eeg': data[:, 0, roi, 0]}
             savemat(f'pse_img/eeg_roi{roi}_ww_run{i}_noise-{args.noise}_G-{args.G}_Mi-{args.Mi}_Jn-{args.Jn}_Ji-{args.Ji}_Wi-{args.Wi}_We-{args.We}.mat', eeg)
 
