@@ -11,4 +11,5 @@ Ji=${4}
 Wp=${5}
 
 python single_sim_runner.py ${noise} ${G} ${Jn} ${Ji} ${Wp} 
-matlab -nodisplay -nosplash -nodesktop -r "run('mse');exit;" ${noise} ${G} ${Jn} ${Ji} ${Wp} 
+matlab -nodisplay -nosplash -nodesktop -r "noise=${noise}; G=${G}; Jn=${Jn}; Ji=${Ji}; Wp=${Wp}; run('mse');exit;"
+
