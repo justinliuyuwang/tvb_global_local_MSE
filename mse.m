@@ -13,7 +13,10 @@ colors = ['r', 'g', 'b', 'k']; % Red, Green, Blue, Black
 % Prepare to store data for each ROI
 a_values = cell(1, 4);
 c_values = cell(1, 4);
-plotHandles = zeros(1, 4); % Array to store plot handles for legend
+
+% Create a figure for the overlaid plots
+figure;
+hold on; % Hold on to plot multiple data sets in the same figure
 
 % Loop through each ROI
 for roi = 0:3
@@ -64,23 +67,21 @@ for roi = 0:3
     SStotalLog = (length(yLog) - 1) * var(yLog);
     rsqLog = 1 - SSresidLog/SStotalLog;
 
-    % Choose the best model
+    % Choose the best model and plot it
     if rsqQuad >= rsqLog
-        plotHandles(roi+1) = plot(xFitQuad, yFitQuad, 'Color', colors(roi+1));
+        plot(xFitQuad, yFitQuad, 'Color', colors(roi+1), 'LineWidth', 2);
     else
-        plotHandles(roi+1) = plot(exp(xLog), yFitLog, 'Color', colors(roi+1));
+        plot(exp(xLog), yFitLog, 'Color', colors(roi+1), 'LineWidth', 2);
     end
-end
 
-% Add plots for data points
-hold on;
-for roi = 0:3
+    % Plot the data points for the current ROI
     plot(c_values{roi+1}, a_values{roi+1}, 'o', 'Color', colors(roi+1));
 end
+
 hold off;
 
 % Add a legend and title
-legend(plotHandles, {'ROI 0', 'ROI 1', 'ROI 2', 'ROI 3'}, 'Location', 'best');
+legend({'ROI 0', 'ROI 1', 'ROI 2', 'ROI 3'}, 'Location', 'best');
 title('Best Fit Lines for WW ROIs');
 
 % Save the overlayed plot figure
