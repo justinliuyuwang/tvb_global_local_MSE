@@ -1,14 +1,23 @@
-
 formatSpec = '%.6g';
 
+% Display parameters
 disp(['Noise: ', num2str(noise, formatSpec)]);
 disp(['G: ', num2str(G, formatSpec)]);
 disp(['Jn: ', num2str(Jn, formatSpec)]);
 disp(['Ji: ', num2str(Ji, formatSpec)]);
 disp(['Wp: ', num2str(Wp, formatSpec)]);
 
+% Define colors for each ROI
+colors = ['r', 'g', 'b', 'k']; % Red, Green, Blue, Black
+
+% Prepare to store data for each ROI
+a_values = cell(1, 4);
+b_values = cell(1, 4);
+c_values = cell(1, 4);
+
 % Loop through each ROI
 for roi = 0:3
+
     % Dynamically create the file path for each ROI
     file_path = sprintf(['pse_img/eeg_roi%d_ww_run1_noise-', formatSpec, '_G-', formatSpec, '_Jn-', formatSpec, '_Ji-', formatSpec, '_Wp-', formatSpec, '.mat'], roi, noise, G, Jn, Ji, Wp);
     
@@ -29,14 +38,34 @@ for roi = 0:3
     truncated_elements = 2000 * num_columns;
     truncated_middle_rows = middle_rows(1:truncated_elements, :);
     reshaped_middle_rows = reshape(truncated_middle_rows, [2000, num_columns]);
-
-    % Assuming get_mse_curve_across_trials_matlab is a function you have
+    
+    % Store the data for plotting later
     [a, b, c] = get_mse_curve_across_trials_matlab(reshaped_middle_rows);
-    plot(c, a, "o");
-    title_str = sprintf('Mean MSE Curve for WW ROI %d', roi);
-    title(title_str);
-
-    % Save the figure for each ROI
-    saveas(gcf, sprintf(['pse_img/mean_mse_plot_ww_roi%d_noise-', formatSpec, '_G-', formatSpec, '_Jn-', formatSpec, '_Ji-', formatSpec, '_Wp-', formatSpec, '.png'], roi, noise, G, Jn, Ji, Wp));
-    clf;
+    a_values{roi+1} = a;
+    b_values{roi+1} = b;
+    c_values{roi+1} = c;
 end
+
+% Create a figure for the overlaid plots
+figure;
+hold on; % Hold on to plot multiple data sets in the same figure
+for roi = 0:3
+    % Plot points
+    plot(c_values{roi+1}, a_values{roi+1}, 'o', 'Color', colors(roi+1));
+
+    % Calculate and plot line of best fit
+    p = polyfit(c_values{roi+1}, a_values{roi+1}, 1); % Linear fit
+    xFit = linspace(min(c_values{roi+1}), max(c_values{roi+1}), 100); % 100 points for a smooth line
+    yFit = polyval(p, xFit);
+    plot(xFit, yFit, '-', 'Color', colors(roi+1));
+end
+hold off;
+
+% Add a legend and title
+legend('ROI 0', 'ROI 1', 'ROI 2', 'ROI 3', 'Location', 'best');
+title('Mean MSE Curves with Best Fit Lines for WW ROIs');
+
+% Save the overlayed plot figure
+filename = sprintf(['pse_img/mean_mse_plots_overlay_ww_noise-', formatSpec, '_G-', formatSpec, '_Jn-', formatSpec, '_Ji-', formatSpec, '_Wp-', formatSpec, '.png'], noise, G, Jn, Ji, Wp);
+saveas(gcf, filename);
+clf;
