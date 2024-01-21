@@ -102,6 +102,6 @@ done
 
 # Read subjects and parameter combinations, then submit batch jobs
     while read -r my_noise my_G Jn Ji Wp; do
-        sbatch -J "params_sim_noise-${my_noise}_G-${my_G}_Jn-${Jn}_Ji-${Ji}_Wp-${Wp}" -o "${log_directory}/params_sim_G-${my_G}_noise-${my_noise}_G-${my_G}_Jn-${Jn}_Ji-${Ji}_Wp-${Wp}.out" "sbatch.sh" "${my_noise}" "${my_G}" "${Jn}" "${Ji}" "${Wp}"
+        sbatch -J "params_sim_noise-${my_noise}_G-${my_G}_Jn-${Jn}_Ji-${Ji}_Wp-${Wp}" -o "${log_directory}/params_sim_noise-${my_noise}_G-${my_G}_Jn-${Jn}_Ji-${Ji}_Wp-${Wp}.out" "sbatch.sh" "${my_noise}" "${my_G}" "${Jn}" "${Ji}" "${Wp}"
     done < "$paramfile"
 
