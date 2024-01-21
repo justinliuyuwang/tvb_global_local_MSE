@@ -10,7 +10,7 @@ disp(['Wp: ', num2str(Wp, formatSpec)]);
 % Loop through each ROI
 for roi = 0:3
     % Dynamically create the file path for each ROI
-    file_path = sprintf(['pse_img/eeg_roi%d_ww_run1_noise', formatSpec, '_G', formatSpec, '_Jn', formatSpec, '_Ji', formatSpec, '_Wp', formatSpec, '.mat'], roi, noise, G, Jn, Ji, Wp);
+    file_path = sprintf(['pse_img/eeg_roi%d_ww_run1_noise-', formatSpec, '_G-', formatSpec, '_Jn-', formatSpec, '_Ji-', formatSpec, '_Wp-', formatSpec, '.mat'], roi, noise, G, Jn, Ji, Wp);
     
     % Load the data from the file
     if exist(file_path, 'file')
@@ -37,6 +37,6 @@ for roi = 0:3
     title(title_str);
 
     % Save the figure for each ROI
-    saveas(gcf, sprintf(['pse_img/mean_mse_plot_ww_roi%d_noise', formatSpec, '_G', formatSpec, '_Jn', formatSpec, '_Ji', formatSpec, '_Wp', formatSpec, '.png'], roi, noise, G, Jn, Ji, Wp));
+    saveas(gcf, sprintf(['pse_img/mean_mse_plot_ww_roi%d_noise-', formatSpec, '_G-', formatSpec, '_Jn-', formatSpec, '_Ji-', formatSpec, '_Wp-', formatSpec, '.png'], roi, noise, G, Jn, Ji, Wp));
     clf;
 end
