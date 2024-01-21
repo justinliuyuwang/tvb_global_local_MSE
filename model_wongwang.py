@@ -18,9 +18,15 @@ def get_connectivity(scaling_factor):
 
 
         conn = connectivity.Connectivity.from_file("connectivity_76.zip")
+        #74, 75, 52, 53
         conn.weights = conn.weights / scaling_factor
         conn.tract_lengths = np.ones_like(conn.weights)
         conn.centers = np.zeros(np.shape(conn.weights)[0])
+        indices = [73, 74, 51, 52]  # Adjusted for 0-indexing
+        conn.weights = conn.weights[np.ix_(indices, indices)]
+        conn.tract_lengths = conn.tract_lengths[np.ix_(indices, indices)]
+        conn.centers = conn.centers[indices]
+
         conn.speed = np.r_[np.Inf]
         return conn
 
