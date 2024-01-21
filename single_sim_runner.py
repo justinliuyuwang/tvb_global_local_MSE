@@ -57,19 +57,19 @@ def main():
         # Plot and save time series stack
         ax = plot_ts_stack(data[1*1000:20*1000:10, 0, :, 0], x=time[1*1000:20*1000:10]/1000., width=20)
         ax.set(xlabel='time [s]')
-        plt.savefig(f"pse_img/ts_allroi_ww_run{i}_noise-{args.noise}_G-{args.G}_Mi-{args.Mi}_Jn-{args.Jn}_Ji-{args.Ji}_Wi-{args.Wi}_We-{args.We}.png")
+        plt.savefig(f"pse_img/ts_allroi_ww_run{i}_noise-{args.noise}_G-{args.G}_Jn-{args.Jn}_Ji-{args.Ji}_Wp-{args.Wp}.png")
 
         # Plot and save temporal average
         plt.figure()
         plt.plot(time, data[:, 0, :, 0], 'k', alpha=0.1)
         plt.title("Temporal Average")
-        plt.savefig(f"pse_img/ts_allroi_regplot_ww_run{i}_noise-{args.noise}_G-{args.G}_Mi-{args.Mi}_Jn-{args.Jn}_Ji-{args.Ji}_Wi-{args.Wi}_We-{args.We}.png")
+        plt.savefig(f"pse_img/ts_allroi_regplot_ww_run{i}_noise-{args.noise}_G-{args.G}_Jn-{args.Jn}_Ji-{args.Ji}_Wp-{args.Wp}.png")
 
         # Save data for each ROI
         data = data[1000:]
         for roi in range(4):
             eeg = {'eeg': data[:, 0, roi, 0]}
-            savemat(f'pse_img/eeg_roi{roi}_ww_run{i}_noise-{args.noise}_G-{args.G}_Mi-{args.Mi}_Jn-{args.Jn}_Ji-{args.Ji}_Wi-{args.Wi}_We-{args.We}.mat', eeg)
+            savemat(f'pse_img/eeg_roi{roi}_ww_run{i}_noise-{args.noise}_G-{args.G}_Jn-{args.Jn}_Ji-{args.Ji}_Wp-{args.Wp}.mat', eeg)
 
 if __name__ == "__main__":
     main()
