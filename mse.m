@@ -13,7 +13,7 @@ colors = ['r', 'g', 'b', 'k']; % Red, Green, Blue, Black
 % Prepare to store data for each ROI
 a_values = cell(1, 4);
 c_values = cell(1, 4);
-plotHandles = zeros(1, 8); % Array to store plot handles for legend
+plotHandles = zeros(1, 4); % Array to store plot handles for legend
 
 % Loop through each ROI
 for roi = 0:3
@@ -43,32 +43,47 @@ for roi = 0:3
     [a, b, c] = get_mse_curve_across_trials_matlab(reshaped_middle_rows);
     a_values{roi+1} = a;
     c_values{roi+1} = c;
-end
 
-% Create a figure for the overlaid plots
-figure;
-hold on; % Hold on to plot multiple data sets in the same figure
-for roi = 0:3
-    % Plot points and store handle for legend
-    plotHandles(roi*2+1) = plot(c_values{roi+1}, a_values{roi+1}, 'o', 'Color', colors(roi+1));
-
-    % Fit a logarithmic curve and plot
-    % Filter out non-positive values since log(x) is undefined for x <= 0
+    % Check for non-positive values for logarithmic fit
     positiveIndices = c_values{roi+1} > 0;
     xLog = log(c_values{roi+1}(positiveIndices));
     yLog = a_values{roi+1}(positiveIndices);
-    p = polyfit(xLog, yLog, 1); % Linear fit to the transformed data
-    xFit = linspace(min(xLog), max(xLog), 100);
-    yFit = polyval(p, xFit);
-    plotHandles(roi*2+2) = plot(exp(xFit), yFit, '-', 'Color', colors(roi+1));
+
+    % Fit a quadratic curve
+    pQuad = polyfit(c_values{roi+1}, a_values{roi+1}, 2);
+    xFitQuad = linspace(min(c_values{roi+1}), max(c_values{roi+1}), 100);
+    yFitQuad = polyval(pQuad, xFitQuad);
+    SSresidQuad = sum((a_values{roi+1} - polyval(pQuad, c_values{roi+1})).^2);
+    SStotalQuad = (length(a_values{roi+1}) - 1) * var(a_values{roi+1});
+    rsqQuad = 1 - SSresidQuad/SStotalQuad;
+
+    % Fit a logarithmic curve
+    pLog = polyfit(xLog, yLog, 1);
+    yFitLog = polyval(pLog, xLog);
+    SSresidLog = sum((yLog - polyval(pLog, xLog)).^2);
+    SStotalLog = (length(yLog) - 1) * var(yLog);
+    rsqLog = 1 - SSresidLog/SStotalLog;
+
+    % Choose the best model
+    if rsqQuad >= rsqLog
+        plotHandles(roi+1) = plot(xFitQuad, yFitQuad, 'Color', colors(roi+1));
+    else
+        plotHandles(roi+1) = plot(exp(xLog), yFitLog, 'Color', colors(roi+1));
+    end
+end
+
+% Add plots for data points
+hold on;
+for roi = 0:3
+    plot(c_values{roi+1}, a_values{roi+1}, 'o', 'Color', colors(roi+1));
 end
 hold off;
 
 % Add a legend and title
-legend(plotHandles(1:2:end), {'ROI 0', 'ROI 1', 'ROI 2', 'ROI 3'}, 'Location', 'best');
-title('Mean MSE Curves with Logarithmic Best Fit Lines for WW ROIs');
+legend(plotHandles, {'ROI 0', 'ROI 1', 'ROI 2', 'ROI 3'}, 'Location', 'best');
+title('Best Fit Lines for WW ROIs');
 
 % Save the overlayed plot figure
-filename = sprintf(['pse_img/mean_mse_plots_overlay_ww_noise-', formatSpec, '_G-', formatSpec, '_Jn-', formatSpec, '_Ji-', formatSpec, '_Wp-', formatSpec, '.png'], noise, G, Jn, Ji, Wp);
+filename = sprintf(['pse_img/best_fit_plots_overlay_ww_noise-', formatSpec, '_G-', formatSpec, '_Jn-', formatSpec, '_Ji-', formatSpec, '_Wp-', formatSpec, '.png'], noise, G, Jn, Ji, Wp);
 saveas(gcf, filename);
 clf;
