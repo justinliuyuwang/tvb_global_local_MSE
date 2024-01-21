@@ -53,7 +53,7 @@ for roi = 0:3
     plotHandles(roi*2+1) = plot(c_values{roi+1}, a_values{roi+1}, 'o', 'Color', colors(roi+1));
 
     % Calculate and plot curved line of best fit (e.g., quadratic)
-    p = polyfit(c_values{roi+1}, a_values{roi+1}, 2); % Quadratic fit
+    p = polyfit(c_values{roi+1}, a_values{roi+1}, 3); % cubic fit
     xFit = linspace(min(c_values{roi+1}), max(c_values{roi+1}), 100); % 100 points for a smooth line
     yFit = polyval(p, xFit);
     plotHandles(roi*2+2) = plot(xFit, yFit, '-', 'Color', colors(roi+1));
