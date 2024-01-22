@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Check if the correct number of arguments is provided
-if [ "$#" -ne 23 ]; then
+if [ "$#" -ne 17 ]; then
     echo "Usage: $0 paramfile log_directory min_noise max_noise num_noise_values min_G max_G num_G_values min_Jn max_Jn num_Jn_values min_Ji max_Ji num_Ji_values min_Wp max_Wp num_Wp_values"
     echo "Example: $0 param.txt /path/to/log_dir 1e-5 2e-5 3 0.01 0.02 3 1.0 1.1 3 1 1 1 1.0 1.5 3 "
     exit 1
