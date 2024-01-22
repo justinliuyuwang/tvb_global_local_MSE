@@ -39,15 +39,15 @@ def process_sub(my_noise,my_G,Jn,Ji,Wp):
     rww = models.DecoBalancedExcInh()
     if not Jn==0:
         print("Jn")
-        rww = models.DecoBalancedExcInh(J_N=np.array([Jn])))
+        rww = models.DecoBalancedExcInh(J_N=np.array([Jn]))
         my_noise=1e-5
     elif not Ji==0:
         print("Ji")
-        rww = models.DecoBalancedExcInh(J_i=np.array([Ji])))
+        rww = models.DecoBalancedExcInh(J_i=np.array([Ji]))
         my_noise=1e-5
     elif not Wp==0:
         print("Wp")
-        rww = models.DecoBalancedExcInh(w_p=np.array([Wp])))
+        rww = models.DecoBalancedExcInh(w_p=np.array([Wp]))
         my_noise=1e-5
     elif not my_G==0:
         print("G")
@@ -55,11 +55,11 @@ def process_sub(my_noise,my_G,Jn,Ji,Wp):
         my_noise=1e-5
     elif not my_noise==0:
         print("noise")
-        rww = models.DecoBalancedExcInh())
+        rww = models.DecoBalancedExcInh()
         my_noise=my_noise
     else:
         print("default")
-        rww = models.DecoBalancedExcInh())
+        rww = models.DecoBalancedExcInh()
         my_noise=1e-5
 
                         
