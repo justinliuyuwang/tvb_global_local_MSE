@@ -102,9 +102,14 @@ done
 # Calculate the number of lines in the parameter file
 num_lines=$(wc -l < "$paramfile")
 
-# Submit job array
-sbatch --array=1-${num_lines} "sbatch.sh" "$paramfile" "$log_directory" "$num_lines"
+# Number of simulations each sbatch job should run
+num_simulations_per_job=5
 
+# Calculate the number of jobs needed
+num_jobs=$(( (num_lines + num_simulations_per_job - 1) / num_simulations_per_job ))
+
+# Submit job array
+sbatch --array=1-${num_jobs} "sbatch.sh" "$paramfile" "$log_directory" "$num_simulations_per_job"
 
 # Read subjects and parameter combinations, then submit batch jobs
 #    while read -r my_noise my_G Jn Ji Wp; do
