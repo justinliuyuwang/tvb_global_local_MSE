@@ -2,12 +2,13 @@
 #SBATCH --account=rrg-rmcintos
 #SBATCH --mem=8000MB
 #SBATCH --time=0-3:00
-#SBATCH --array=1-100  # Example, replace 100 with the number of lines in your parameter file
 
 # Read parameters from file
 paramfile=$1
 log_directory=$2
+num_lines=$3  # This is the new argument passed from runner.sh
 index=$SLURM_ARRAY_TASK_ID
+
 read -r noise G Jn Ji Wp <<< $(sed -n "${index}p" $paramfile)
 
 # Log file naming based on parameters
