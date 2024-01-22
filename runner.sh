@@ -99,7 +99,12 @@ for Wp in "${Wp_values[@]}"; do
     echo "0 0 0 0 $Wp" >> "$paramfile"
 done
 
-sbatch --array=1-$(wc -l < "$paramfile") "sbatch.sh" "$paramfile" "$log_directory"
+# Calculate the number of lines in the parameter file
+num_lines=$(wc -l < "$paramfile")
+
+# Submit job array
+sbatch --array=1-${num_lines} "sbatch.sh" "$paramfile" "$log_directory" "$num_lines"
+
 
 # Read subjects and parameter combinations, then submit batch jobs
 #    while read -r my_noise my_G Jn Ji Wp; do
