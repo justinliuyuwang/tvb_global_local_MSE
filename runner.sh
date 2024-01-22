@@ -64,7 +64,7 @@ generate_values() {
 }
 
 # Generate parameter values
-noise_values=($(generate_values $min_noise $max_noise $num_noise_values))
+noise_values=(0.0000001 0.0000002 0.0000003 0.0000004 0.0000005 0.0000006 0.0000007 0.000001 0.000002 0.000003 0.000004 0.000005 0.000006 0.000007 0.00001 0.00002 0.00003 0.00004 0.00005 0.00006 0.00007 0.0001 0.0002 0.0003 0.0004 0.0005 0.0006 0.0007 0.001 0.002 0.003 0.004 0.005 0.006 0.007 0.01 0.02 0.03 0.04 0.05)
 G_values=($(generate_values $min_G $max_G $num_G_values))
 Jn_values=($(generate_values $min_Jn $max_Jn $num_Jn_values))
 Ji_values=($(generate_values $min_Ji $max_Ji $num_Ji_values))
