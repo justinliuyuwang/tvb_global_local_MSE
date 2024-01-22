@@ -99,9 +99,10 @@ for Wp in "${Wp_values[@]}"; do
     echo "0 0 0 0 $Wp" >> "$paramfile"
 done
 
+sbatch --array=1-$(wc -l < "$paramfile") "sbatch.sh" "$paramfile" "$log_directory"
 
 # Read subjects and parameter combinations, then submit batch jobs
-    while read -r my_noise my_G Jn Ji Wp; do
-        sbatch -J "params_sim_noise-${my_noise}_G-${my_G}_Jn-${Jn}_Ji-${Ji}_Wp-${Wp}" -o "${log_directory}/params_sim_noise-${my_noise}_G-${my_G}_Jn-${Jn}_Ji-${Ji}_Wp-${Wp}.out" "sbatch.sh" "${my_noise}" "${my_G}" "${Jn}" "${Ji}" "${Wp}"
-    done < "$paramfile"
+#    while read -r my_noise my_G Jn Ji Wp; do
+#        sbatch -J "params_sim_noise-${my_noise}_G-${my_G}_Jn-${Jn}_Ji-${Ji}_Wp-${Wp}" -o "${log_directory}/params_sim_noise-${my_noise}_G-${my_G}_Jn-${Jn}_Ji-${Ji}_Wp-${Wp}.out" "sbatch.sh" "${my_noise}" "${my_G}" "${Jn}" "${Ji}" "${Wp}"
+#    done < "$paramfile"
 
