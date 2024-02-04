@@ -62,15 +62,15 @@ def main():
         formatted_Wp = format_float(args.Wp)
 
         # Plot and save time series stack
-        ax = plot_ts_stack(data[1*1000:20*1000:10, 0, :, 0], x=time[1*1000:20*1000:10]/1000., width=20)
-        ax.set(xlabel='time [s]')
-        plt.savefig(f"pse_img/ts_allroi_ww_run{i}_noise-{formatted_noise}_G-{formatted_G}_Jn-{formatted_Jn}_Ji-{formatted_Ji}_Wp-{formatted_Wp}.png")
+        #ax = plot_ts_stack(data[1*1000:20*1000:10, 0, :, 0], x=time[1*1000:20*1000:10]/1000., width=20)
+        #ax.set(xlabel='time [s]')
+        #plt.savefig(f"pse_img/ts_allroi_ww_run{i}_noise-{formatted_noise}_G-{formatted_G}_Jn-{formatted_Jn}_Ji-{formatted_Ji}_Wp-{formatted_Wp}.png")
         
         # Plot and save temporal average
-        plt.figure()
-        plt.plot(time, data[:, 0, :, 0], 'k', alpha=0.1)
-        plt.title("Temporal Average")
-        plt.savefig(f"pse_img/ts_allroi_regplot_ww_run{i}_noise-{formatted_noise}_G-{formatted_G}_Jn-{formatted_Jn}_Ji-{formatted_Ji}_Wp-{formatted_Wp}.png")
+        #plt.figure()
+        #plt.plot(time, data[:, 0, :, 0], 'k', alpha=0.1)
+        #plt.title("Temporal Average")
+        #plt.savefig(f"pse_img/ts_allroi_regplot_ww_run{i}_noise-{formatted_noise}_G-{formatted_G}_Jn-{formatted_Jn}_Ji-{formatted_Ji}_Wp-{formatted_Wp}.png")
         
         # Save data for each ROI
         data = data[1000:]
