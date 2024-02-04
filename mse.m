@@ -24,6 +24,7 @@ for roi = 0:3
     % Load the data from the file
     if exist(file_path, 'file')
         load(file_path);
+        delete(file_path); % Delete the .mat file after loading to save space
     else
         disp(['File not found: ', file_path]);
         continue; % Skip to the next iteration if file not found
