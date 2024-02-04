@@ -78,31 +78,52 @@ Wp_values=($(generate_values $min_Wp $max_Wp $num_Wp_values))
 # Create combinations and write them to the file
 > "$paramfile"  # Clear the file before writing
 
-
-# Varying Mi
+# loops for paramsearch noise X ___
 for my_noise in "${noise_values[@]}"; do
-    echo "$my_noise $default_G $default_Jn $default_Ji $default_Wp" >> "$paramfile"
+    # Varying Mi
+    for my_G in "${G_values[@]}"; do
+        echo "$my_noise $my_G $default_Jn $default_Ji $default_Wp" >> "$paramfile"
+    done
+    
+    # Varying Mi
+    for Jn in "${Jn_values[@]}"; do
+        echo "$my_noise $default_G $Jn $default_Ji $default_Wp" >> "$paramfile"
+    done
+    
+    # Varying Mi
+    for Ji in "${Ji_values[@]}"; do
+        echo "$my_noise $default_G $default_Jn $Ji $default_Wp" >> "$paramfile"
+    done
+    
+    # Varying Mi
+    for Wp in "${Wp_values[@]}"; do
+        echo "$my_noise $default_G $default_Jn $default_Ji $Wp" >> "$paramfile"
+    done
 done
+# # Varying Mi
+# for my_noise in "${noise_values[@]}"; do
+#     echo "$my_noise $default_G $default_Jn $default_Ji $default_Wp" >> "$paramfile"
+# done
 
-# Varying Mi
-for my_G in "${G_values[@]}"; do
-    echo "$default_noise $my_G $default_Jn $default_Ji $default_Wp" >> "$paramfile"
-done
+# # Varying Mi
+# for my_G in "${G_values[@]}"; do
+#     echo "$default_noise $my_G $default_Jn $default_Ji $default_Wp" >> "$paramfile"
+# done
 
-# Varying Mi
-for Jn in "${Jn_values[@]}"; do
-    echo "$default_noise $default_G $Jn $default_Ji $default_Wp" >> "$paramfile"
-done
+# # Varying Mi
+# for Jn in "${Jn_values[@]}"; do
+#     echo "$default_noise $default_G $Jn $default_Ji $default_Wp" >> "$paramfile"
+# done
 
-# Varying Mi
-for Ji in "${Ji_values[@]}"; do
-    echo "$default_noise $default_G $default_Jn $Ji $default_Wp" >> "$paramfile"
-done
+# # Varying Mi
+# for Ji in "${Ji_values[@]}"; do
+#     echo "$default_noise $default_G $default_Jn $Ji $default_Wp" >> "$paramfile"
+# done
 
-# Varying Mi
-for Wp in "${Wp_values[@]}"; do
-    echo "$default_noise $default_G $default_Jn $default_Ji $Wp" >> "$paramfile"
-done
+# # Varying Mi
+# for Wp in "${Wp_values[@]}"; do
+#     echo "$default_noise $default_G $default_Jn $default_Ji $Wp" >> "$paramfile"
+# done
 
 # Calculate the number of lines in the parameter file
 num_lines=$(wc -l < "$paramfile")
