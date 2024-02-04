@@ -34,7 +34,12 @@ min_Wp=${15}
 max_Wp=${16}
 num_Wp_values=${17}
 
-
+#defaults defined here https://github.com/the-virtual-brain/tvb-root/blob/bc81607e75e89d4a9779490d48bf2290f7b039f0/tvb_library/tvb/simulator/models/wong_wang_exc_inh.py
+default_noise='1e-5'
+default_G='2'
+default_Jn='0.15'
+default_Ji='1'
+default_Wp='1.4'
 # my_G=0.01
 # my_noise=1e-5
 
@@ -76,27 +81,27 @@ Wp_values=($(generate_values $min_Wp $max_Wp $num_Wp_values))
 
 # Varying Mi
 for my_noise in "${noise_values[@]}"; do
-    echo "$my_noise 0 0 0 0" >> "$paramfile"
+    echo "$my_noise $default_G $default_Jn $default_Ji $default_Wp" >> "$paramfile"
 done
 
 # Varying Mi
 for my_G in "${G_values[@]}"; do
-    echo "0 $my_G 0 0 0" >> "$paramfile"
+    echo "$default_noise $my_G $default_Jn $default_Ji $default_Wp" >> "$paramfile"
 done
 
 # Varying Mi
 for Jn in "${Jn_values[@]}"; do
-    echo "0 0 $Jn 0 0" >> "$paramfile"
+    echo "$default_noise $default_G $Jn $default_Ji $default_Wp" >> "$paramfile"
 done
 
 # Varying Mi
 for Ji in "${Ji_values[@]}"; do
-    echo "0 0 0 $Ji 0" >> "$paramfile"
+    echo "$default_noise $default_G $default_Jn $Ji $default_Wp" >> "$paramfile"
 done
 
 # Varying Mi
 for Wp in "${Wp_values[@]}"; do
-    echo "0 0 0 0 $Wp" >> "$paramfile"
+    echo "$default_noise $default_G $default_Jn $default_Ji $Wp" >> "$paramfile"
 done
 
 # Calculate the number of lines in the parameter file
