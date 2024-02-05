@@ -46,7 +46,6 @@ def process_sub(my_noise,my_G,Jn,Ji,Wp):
     #my_noise=1e-5
     #my_dt=1
 
-    rww = models.DecoBalancedExcInh()
 
     sim = simulator.Simulator(
         model=rww,
