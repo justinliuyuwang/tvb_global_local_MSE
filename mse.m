@@ -47,20 +47,40 @@ for roi = 0:3
     c_values{roi+1} = c;
 end
 
+% Concatenate the cell array into a matrix
+a_matrix = cell2mat(a_values);
+
+% Reshape the matrix into a 1D vector
+a_vector = reshape(a_matrix.', 1, []);
+
+% Save the 1D vector to a MAT file
+save(sprintf(['pse_img/vectorized_entropy_values_noise-', formatSpec, '_G-', formatSpec, '_Jn-', formatSpec, '_Ji-', formatSpec, '_Wp-', formatSpec, '_noiseseed-', formatSpec, '.mat'], noise, G, Jn, Ji, Wp, noise_seed), 'a_vector');
+
+
+% Concatenate the cell array into a matrix
+c_matrix = cell2mat(c_values);
+
+% Reshape the matrix into a 1D vector
+c_vector = reshape(c_matrix.', 1, []);
+
+% Save the 1D vector to a MAT file
+save(sprintf(['pse_img/vectorized_timescale_values_noise-', formatSpec, '_G-', formatSpec, '_Jn-', formatSpec, '_Ji-', formatSpec, '_Wp-', formatSpec, '_noiseseed-', formatSpec, '.mat'], noise, G, Jn, Ji, Wp, noise_seed), 'c_vector');
+
+
 % Create a figure for the overlaid plots
-figure;
-hold on; % Hold on to plot multiple data sets in the same figure
-for roi = 0:3
+%figure;
+%hold on; % Hold on to plot multiple data sets in the same figure
+%for roi = 0:3
     % Plot points and store handle for legend
-    plotHandles(roi+1) = plot(c_values{roi+1}, a_values{roi+1}, 'o', 'Color', colors(roi+1));
-end
-hold off;
+    %plotHandles(roi+1) = plot(c_values{roi+1}, a_values{roi+1}, 'o', 'Color', colors(roi+1));
+%end
+%hold off;
 
 % Add a legend and title
-legend(plotHandles, {'ROI 0', 'ROI 1', 'ROI 2', 'ROI 3'}, 'Location', 'best');
-title('Mean MSE Curves for WW ROIs');
+%legend(plotHandles, {'ROI 0', 'ROI 1', 'ROI 2', 'ROI 3'}, 'Location', 'best');
+%title('Mean MSE Curves for WW ROIs');
 
 % Save the overlayed plot figure
-filename = sprintf(['pse_img/mean_mse_plots_overlay_ww_noise-', formatSpec, '_G-', formatSpec, '_Jn-', formatSpec, '_Ji-', formatSpec, '_Wp-', formatSpec, '.png'], noise, G, Jn, Ji, Wp);
-saveas(gcf, filename);
-clf;
+%filename = sprintf(['pse_img/mean_mse_plots_overlay_ww_noise-', formatSpec, '_G-', formatSpec, '_Jn-', formatSpec, '_Ji-', formatSpec, '_Wp-', formatSpec, '.png'], noise, G, Jn, Ji, Wp);
+%saveas(gcf, filename);
+%clf;
