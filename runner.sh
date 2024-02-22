@@ -94,25 +94,27 @@ Wp_values=($(generate_values $min_Wp $max_Wp $num_Wp_values))
 
 # loops for paramsearch noise X ___
 for my_noise in "${noise_values[@]}"; do
+for ((noise_seed=1; noise_seed<=10; noise_seed++)); do
     # Varying Mi
     for my_G in "${G_values[@]}"; do
-        echo "$my_noise $my_G $default_Jn $default_Ji $default_Wp" >> "$paramfile"
+        echo "$my_noise $my_G $default_Jn $default_Ji $default_Wp" "$noise_seed" >> "$paramfile"
     done
     
     # Varying Mi
     for Jn in "${Jn_values[@]}"; do
-        echo "$my_noise $default_G $Jn $default_Ji $default_Wp" >> "$paramfile"
+        echo "$my_noise $default_G $Jn $default_Ji $default_Wp" "$noise_seed" >> "$paramfile"
     done
     
     # Varying Mi
     for Ji in "${Ji_values[@]}"; do
-        echo "$my_noise $default_G $default_Jn $Ji $default_Wp" >> "$paramfile"
+        echo "$my_noise $default_G $default_Jn $Ji $default_Wp" "$noise_seed" >> "$paramfile"
     done
     
     # Varying Mi
     for Wp in "${Wp_values[@]}"; do
-        echo "$my_noise $default_G $default_Jn $default_Ji $Wp" >> "$paramfile"
+        echo "$my_noise $default_G $default_Jn $default_Ji $Wp" "$noise_seed" >> "$paramfile"
     done
+done
 done
 # # Varying Mi
 # for my_noise in "${noise_values[@]}"; do
