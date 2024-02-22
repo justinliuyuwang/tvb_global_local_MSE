@@ -20,10 +20,10 @@ fi
 
 # Loop over the specified range of lines
 for i in $(seq $start_line $end_line); do
-    read -r noise G Jn Ji Wp <<< $(sed -n "${i}p" $paramfile)
-    log_file="${log_directory}/sim_${i}_noise-${noise}_G-${G}_Jn-${Jn}_Ji-${Ji}_Wp-${Wp}.out"
+    read -r noise G Jn Ji Wp noise_seed <<< $(sed -n "${i}p" $paramfile)
+    log_file="${log_directory}/sim_${i}_noise-${noise}_G-${G}_Jn-${Jn}_Ji-${Ji}_Wp-${Wp}_noiseseed-${noise_seed}.out"
 
     # Run simulations and Matlab calls
-    python single_sim_runner.py ${noise} ${G} ${Jn} ${Ji} ${Wp} > "$log_file"
-    matlab -nodisplay -nosplash -nodesktop -r "noise=${noise}; G=${G}; Jn=${Jn}; Ji=${Ji}; Wp=${Wp}; run('mse');exit;" >> "$log_file"
+    python single_sim_runner.py ${noise} ${G} ${Jn} ${Ji} ${Wp} ${noise_seed} > "$log_file"
+    matlab -nodisplay -nosplash -nodesktop -r "noise=${noise}; G=${G}; Jn=${Jn}; Ji=${Ji}; Wp=${Wp}; noise_seed=${noise_seed}; run('mse');exit;" >> "$log_file"
 done
