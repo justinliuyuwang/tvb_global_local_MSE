@@ -30,7 +30,7 @@ def get_connectivity(scaling_factor):
         conn.speed = np.r_[np.Inf]
         return conn
 
-def process_sub(my_noise,my_G,Jn,Ji,Wp):
+def process_sub(my_noise,my_G,Jn,Ji,Wp,noise_seed):
     
     my_magic=1  # TO EDIT
     my_dt=1.0  # TO EDIT
@@ -53,7 +53,7 @@ def process_sub(my_noise,my_G,Jn,Ji,Wp):
         connectivity=get_connectivity(1),
         #coupling=coupling.Linear(a=numpy.array([0.5 / 50.0])),
         coupling=coupling.Linear(a=np.array([0.00390625])), #calculated so that this x default G value in model = 0.01?
-        integrator=integrators.EulerStochastic(dt=my_dt, noise=noise.Additive(nsig=np.array([my_noise]))), #1e-5
+        integrator=integrators.EulerStochastic(dt=my_dt, noise=noise.Additive(nsig=np.array([my_noise]),noise_seed=int(noise_seed))), #1e-5
         monitors=(monitors.TemporalAverage(period=1.),),
         simulation_length=9e3
     ).configure()
