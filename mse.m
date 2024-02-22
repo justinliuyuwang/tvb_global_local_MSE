@@ -6,6 +6,7 @@ disp(['G: ', num2str(G, formatSpec)]);
 disp(['Jn: ', num2str(Jn, formatSpec)]);
 disp(['Ji: ', num2str(Ji, formatSpec)]);
 disp(['Wp: ', num2str(Wp, formatSpec)]);
+disp(['noise_seed: ', num2str(noise_seed, formatSpec)]);
 
 % Define colors for each ROI
 colors = ['r', 'g', 'b', 'k']; % Red, Green, Blue, Black
@@ -19,12 +20,12 @@ plotHandles = zeros(1, 4); % Array to store plot handles for legend
 for roi = 0:3
 
     % Dynamically create the file path for each ROI
-    file_path = sprintf(['pse_img/eeg_roi%d_ww_run1_noise-', formatSpec, '_G-', formatSpec, '_Jn-', formatSpec, '_Ji-', formatSpec, '_Wp-', formatSpec, '.mat'], roi, noise, G, Jn, Ji, Wp);
+    file_path = sprintf(['pse_img/eeg_roi%d_ww_run1_noise-', formatSpec, '_G-', formatSpec, '_Jn-', formatSpec, '_Ji-', formatSpec, '_Wp-', formatSpec, '_noiseseed-', formatSpec, '.mat'], roi, noise, G, Jn, Ji, Wp, noise_seed);
     
     % Load the data from the file
     if exist(file_path, 'file')
         load(file_path);
-        delete(file_path); % Delete the .mat file after loading to save space
+        %delete(file_path); % Delete the .mat file after loading to save space
     else
         disp(['File not found: ', file_path]);
         continue; % Skip to the next iteration if file not found
