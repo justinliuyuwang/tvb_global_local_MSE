@@ -40,6 +40,8 @@ def main():
     parser.add_argument("Jn", type=float, help="Excitatory mass parameter")
     parser.add_argument("Ji", type=float, help="Ji parameter")
     parser.add_argument("Wp", type=float, help="Wp parameter")
+    parser.add_argument("noise_seed", type=float, help="noise seed parameter")
+    
 
     # Parse arguments
     args = parser.parse_args()
@@ -47,7 +49,7 @@ def main():
 
     # Parameters based on parsed arguments
     parameters = [
-        {"my_noise": args.noise,"my_G": args.G,"Jn": args.Jn, "Ji": args.Ji, "Wp": args.Wp}
+        {"my_noise": args.noise,"my_G": args.G,"Jn": args.Jn, "Ji": args.Ji, "Wp": args.Wpm, "noise_seed": args.noise_seed}
     ]
     
     # Loop through each set of parameters
@@ -60,6 +62,7 @@ def main():
         formatted_Jn = format_float(args.Jn)
         formatted_Ji = format_float(args.Ji)
         formatted_Wp = format_float(args.Wp)
+        formatted_noise_seed = format_float(args.noise_seed)
 
         # Plot and save time series stack
         #ax = plot_ts_stack(data[1*1000:20*1000:10, 0, :, 0], x=time[1*1000:20*1000:10]/1000., width=20)
