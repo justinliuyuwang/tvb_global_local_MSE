@@ -18,21 +18,21 @@ max_noise=$4
 num_noise_values=$5
 
 
-min_G=$6
-max_G=$7
-num_G_values=$8
+min_G=0
+max_G=10
+num_G_values='100'
 
-min_Jn=${9}
-max_Jn=${10}
-num_Jn_values=${11}
+min_Jn='0.001'
+max_Jn='0.5'
+num_Jn_values='100'
 
-min_Ji=${12}
-max_Ji=${13}
-num_Ji_values=${14}
+min_Ji='0.001'
+max_Ji='2'
+num_Ji_values='100'
 
-min_Wp=${15}
-max_Wp=${16}
-num_Wp_values=${17}
+min_Wp='0'
+max_Wp='2'
+num_Wp_values='100'
 
 #defaults defined here https://github.com/the-virtual-brain/tvb-root/blob/bc81607e75e89d4a9779490d48bf2290f7b039f0/tvb_library/tvb/simulator/models/wong_wang_exc_inh.py
 default_noise='1e-5'
@@ -51,20 +51,34 @@ default_Wp='1.4'
 
 
 
-# Function to generate equally spaced values between min and max, inclusive
 generate_values() {
     local min=$1
     local max=$2
     local num_values=$3
-    local increment
-    increment=$(bc -l <<< "scale=10; ($max - $min) / ($num_values - 1)") # Calculate increment
+    local original_min=$min  # Remember the original minimum value
+
+    # Adjust min value if it's 0
+    if (( $(bc <<< "$min == 0") )); then
+        min="0.00001"
+    fi
+
+    # Calculate the logarithmic increment
+    local log_min=$(bc -l <<< "l($min)")
+    local log_max=$(bc -l <<< "l($max)")
+    local log_increment=$(bc -l <<< "scale=10; ($log_max - $log_min) / ($num_values - 1)")
 
     local values=()
     for ((i=0; i<num_values; i++)); do
-        local value
-        value=$(bc -l <<< "scale=10; $min + ($increment * $i)") # Calculate each value
+        local log_value=$(bc -l <<< "scale=10; $log_min + ($log_increment * $i)")
+        local value=$(bc -l <<< "e($log_value)") # Convert back to linear scale
         values+=($value)
     done
+
+    # Add original min value at the beginning of the array if it was exactly 0
+    if (( $(bc <<< "$original_min == 0") )); then
+        values=("$original_min" "${values[@]}")
+    fi
+
     echo "${values[@]}"
 }
 
