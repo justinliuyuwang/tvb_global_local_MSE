@@ -49,7 +49,7 @@ def main():
 
     # Parameters based on parsed arguments
     parameters = [
-        {"my_noise": args.noise,"my_G": args.G,"Jn": args.Jn, "Ji": args.Ji, "Wp": args.Wpm, "noise_seed": args.noise_seed}
+        {"my_noise": args.noise,"my_G": args.G,"Jn": args.Jn, "Ji": args.Ji, "Wp": args.Wp, "noise_seed": args.noise_seed}
     ]
 
     # Define CSV file path
