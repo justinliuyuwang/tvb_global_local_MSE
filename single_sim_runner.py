@@ -80,7 +80,8 @@ def main():
         for roi in range(4):
             eeg = {'eeg': data[:, 0, roi, 0]}
             savemat(f'pse_img/eeg_roi{roi}_ww_run{i}_noise-{formatted_noise}_G-{formatted_G}_Jn-{formatted_Jn}_Ji-{formatted_Ji}_Wp-{formatted_Wp}_noiseseed-{formatted_noise_seed}.mat', eeg)
-
+            eeg = {'eeg': data[:, 1, roi, 0]}
+            savemat(f'pse_img/eeg_roi{roi}_ww_run{i}_noise-{formatted_noise}_G-{formatted_G}_Jn-{formatted_Jn}_Ji-{formatted_Ji}_Wp-{formatted_Wp}_noiseseed-{formatted_noise_seed}_v.mat', eeg)
 if __name__ == "__main__":
     main()
 
