@@ -51,7 +51,14 @@ def main():
     parameters = [
         {"my_noise": args.noise,"my_G": args.G,"Jn": args.Jn, "Ji": args.Ji, "Wp": args.Wpm, "noise_seed": args.noise_seed}
     ]
-    
+
+    # Define CSV file path
+    csv_filename = 'timeseries_variability.csv'
+    # If CSV file doesn't exist, create it with appropriate headers
+    if not os.path.isfile(csv_filename):
+        with open(csv_filename, 'w') as file:
+            file.write('noise,G,Jn,Ji,Wp,noise_seed,ROI_0_r_var,ROI_0_v_var,ROI_1_r_var,ROI_1_v_var,ROI_2_r_var,ROI_2_v_var,ROI_3_r_var,ROI_3_v_var\n')
+
     # Loop through each set of parameters
     for i, params in enumerate(parameters, start=1):
         # Run the model
@@ -75,13 +82,24 @@ def main():
         #plt.title("Temporal Average")
         #plt.savefig(f"pse_img/ts_allroi_regplot_ww_run{i}_noise-{formatted_noise}_G-{formatted_G}_Jn-{formatted_Jn}_Ji-{formatted_Ji}_Wp-{formatted_Wp}.png")
         
-        # Save data for each ROI
+        # Calculate variance for each ROI
         data = data[1000:]
+        variances = []
         for roi in range(4):
+            var_r = np.var(data[:, 0, roi, 0])
+            var_v = np.var(data[:, 1, roi, 0])
+            variances.extend([var_r, var_v])
+
+            # Save EEG data for each ROI
             eeg = {'eeg': data[:, 0, roi, 0]}
-            savemat(f'pse_img/eeg_roi{roi}_ww_run{i}_noise-{formatted_noise}_G-{formatted_G}_Jn-{formatted_Jn}_Ji-{formatted_Ji}_Wp-{formatted_Wp}_noiseseed-{formatted_noise_seed}.mat', eeg)
+            savemat(f'pse_img/eeg_roi{roi}_ww_run{i}_noise-{format_float(args.noise)}_G-{format_float(args.G)}_Jn-{format_float(args.Jn)}_Ji-{format_float(args.Ji)}_Wp-{format_float(args.Wp)}_noiseseed-{format_float(args.noise_seed)}.mat', eeg)
             eeg = {'eeg': data[:, 1, roi, 0]}
-            savemat(f'pse_img/eeg_roi{roi}_ww_run{i}_noise-{formatted_noise}_G-{formatted_G}_Jn-{formatted_Jn}_Ji-{formatted_Ji}_Wp-{formatted_Wp}_noiseseed-{formatted_noise_seed}_v.mat', eeg)
+            savemat(f'pse_img/eeg_roi{roi}_ww_run{i}_noise-{format_float(args.noise)}_G-{format_float(args.G)}_Jn-{format_float(args.Jn)}_Ji-{format_float(args.Ji)}_Wp-{format_float(args.Wp)}_noiseseed-{format_float(args.noise_seed)}_v.mat', eeg)
+
+        # Append the variances to the CSV file
+        with open(csv_filename, 'a') as file:
+            file.write(f'{format_float(args.noise)},{format_float(args.G)},{format_float(args.Jn)},{format_float(args.Ji)},{format_float(args.Wp)},{format_float(args.noise_seed)},{",".join(map(str, variances))}\n')
+
 if __name__ == "__main__":
     main()
 
