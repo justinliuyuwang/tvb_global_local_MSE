@@ -4,6 +4,8 @@ import showcase1_ageing as utils
 import matplotlib.pyplot as plt
 from scipy.io import savemat
 import numpy as np
+import pandas as pd
+import os
 
 def format_float(f):
     return "{:.6g}".format(f)
