@@ -8,6 +8,25 @@ from scipy.stats import pearsonr
 # Step 1: Read the CSV file
 df = pd.read_csv('timeseries_variability_backup.csv')
 
+
+# Define default values
+default_G = 2
+default_Jn = 0.15
+default_Ji = 1
+default_Wp = 1.4
+
+def filter_for_defaults(df, parameter):
+    """
+    Filter the DataFrame for rows where parameters not being analyzed are set to their default values.
+    """
+    if parameter != 'Jn':
+        df = df[df['Jn'] == default_Jn]
+    if parameter != 'Ji':
+        df = df[df['Ji'] == default_Ji]
+    if parameter != 'Wp':
+        df = df[df['Wp'] == default_Wp]
+    return df
+
 # Step 2: Define a function to create and save a heatmap
 def create_heatmap(df, x, y, value, title, file_name):
     pivot_table = df.pivot_table(index=y, columns=x, values=value, aggfunc=np.mean)
@@ -52,13 +71,17 @@ def print_correlation(df, parameter, rois):
             correlation, p_value = pearsonr(df[parameter], df[value_col])
             print(f'Comparing {parameter} with {value_col}: Correlation = {correlation:.3f}, p-value = {p_value:.3g}')
 
+
+# Adjusted Step 4 to include filtering
 for parameter in ['G', 'Jn', 'Ji', 'Wp']:
     print(f'\nCorrelation and p-value for parameter: {parameter}')
-    print_correlation(df, parameter, rois)
-    create_roi_heatmaps(df, 'noise', parameter, rois)
+    filtered_df = filter_for_defaults(df, parameter)  # Filter DataFrame based on parameter
+    print_correlation(filtered_df, parameter, rois)
+    create_roi_heatmaps(filtered_df, 'noise', parameter, rois)
 
-# Step 3: Adjusted to create and save heatmaps for each noiseseed and each ROI's r and v variances
+# Adjusted Step 3 to create and save heatmaps for each noiseseed and each ROI's r and v variances
 for seed in noiseseeds:
     df_seed = df[df['noise_seed'] == seed]
     for parameter in ['G', 'Jn', 'Ji', 'Wp']:
-        create_roi_heatmaps(df_seed, 'noise', parameter, rois, noiseseed=seed)
+        filtered_df_seed = filter_for_defaults(df_seed, parameter)  # Filter DataFrame based on parameter
+        create_roi_heatmaps(filtered_df_seed, 'noise', parameter, rois, noiseseed=seed)
