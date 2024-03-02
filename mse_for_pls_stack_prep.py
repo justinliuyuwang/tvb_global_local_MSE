@@ -49,13 +49,11 @@ def load_vectors(directory, active_param, parameter_values, noise_seed):
         # filename = f"vectorized_entropy_values_noise-{noise_value}_G-{parameter_values[0]}_Jn-{parameter_values[1]}_Ji-{parameter_values[2]}_Wp-{parameter_values[3]}_noiseseed-{noise_seed}.mat"
         # filename = f"vectorized_entropy_values_noise-{formatSpec % float(noise_value)}_G-{formatSpec % float(default_values['G']) if active_param != 'G' else formatSpec % value}_Jn-{formatSpec % float(default_values['Jn'])}_Ji-{formatSpec % float(default_values['Ji'])}_Wp-{formatSpec % float(default_values['Wp'])}_noiseseed-{formatSpec % float(noise_seed)}.mat"
         # filename = f"vectorized_entropy_values_noise-{noise_value}_G-{default_values['G'] if active_param != 'G' else value}_Jn-{default_values['Jn'] if active_param != 'Jn' else value}_Ji-{default_values['Ji'] if active_param != 'Ji' else value}_Wp-{default_values['Wp'] if active_param != 'Wp' else value}_noiseseed-{noise_seed}.mat"
-        my_G=default_values['G'] if active_param!='G' else str(format_number(value)) 
-        my_Jn=default_values['Jn'] if active_param!='Jn' else str(format_number(value)) 
-        my_Ji=default_values['Ji'] if active_param!='Ji' else str(format_number(value)) 
-        my_Wp=default_values['Wp'] if active_param!='Wp' else str(format_number(value)) 
+        my_G=default_values['G'] if active_param!='G' else str(format_number(float(value))) 
+        my_Jn=default_values['Jn'] if active_param!='Jn' else str(format_number(float(value))) 
+        my_Ji=default_values['Ji'] if active_param!='Ji' else str(format_number(float(value))) 
+        my_Wp=default_values['Wp'] if active_param!='Wp' else str(format_number(float(value))) 
         filename = f"vectorized_entropy_values_noise-{noise_value}_G-{my_G}_Jn-{my_Jn}_Ji-{my_Ji}_Wp-{my_Wp}_noiseseed-{noise_seed}.mat"
-        if active_param=="Jn":
-            print(filename)
 
         # print(filename)
         full_path = os.path.join(directory, filename)
@@ -101,6 +99,8 @@ for active_param in ['G', 'Jn', 'Ji', 'Wp']:
 
         if stacked_vectors.size > 0:
             all_vectors[active_param].append(stacked_vectors)
+            for i,item in enumerate(parameter_values):
+                parameter_values[i]=float(item)
             all_params[active_param].extend(parameter_values)  # Assuming parameter_values is a list of values for each vector
         else:
             print(f"No vectors found for varying {active_param} with noise={noise_value}, noise_seed={noise_seed}, and default values for other parameters.")
