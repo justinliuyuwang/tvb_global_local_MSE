@@ -88,19 +88,34 @@ def read_noise_seeds(log_file_path):
 
 noise_seeds = [1,2,3,4,5,6,7,8] #read_noise_seeds(log_file_path)
 
-# Loop over all parameters except noise, since we're focusing on noise=0.0005
+all_vectors = {}
+all_params = {}
+
 for active_param in ['G', 'Jn', 'Ji', 'Wp']:
+    all_vectors[active_param] = []
+    all_params[active_param] = []
+    
     for noise_seed in noise_seeds:
         parameter_values = read_params_from_log(log_file_path, active_param, noise_value, default_values)
         stacked_vectors, param_values = load_vectors(directory, active_param, parameter_values, noise_seed)
 
-        # Check for existing files and save the new .mat file
-        output_filename = f'stacked_vectors_{active_param}_noiseseed_{noise_seed}.mat'
-        if not os.path.exists(output_filename):
-            if stacked_vectors.size > 0:
-                savemat(output_filename, {'vectors': stacked_vectors, 'params': param_values})
-                print(f"Saved {output_filename}.")
-            else:
-                print(f"No vectors found for varying {active_param} with noise={noise_value}, noise_seed={noise_seed}, and default values for other parameters.")
+        if stacked_vectors.size > 0:
+            all_vectors[active_param].append(stacked_vectors)
+            all_params[active_param].extend(parameter_values)  # Assuming parameter_values is a list of values for each vector
         else:
-            print(output_filename,"exists ALREADY!")
+            print(f"No vectors found for varying {active_param} with noise={noise_value}, noise_seed={noise_seed}, and default values for other parameters.")
+
+    # After processing all noise seeds, vertically stack the vectors and parameter values
+    if all_vectors[active_param]:
+        final_stacked_vectors = np.vstack(all_vectors[active_param])
+        final_param_values = np.vstack(all_params[active_param])
+
+        # Save the stacked vectors and parameter values as a .mat file
+        output_filename = f'final_stacked_vectors_{active_param}.mat'
+        if not os.path.exists(output_filename):
+            savemat(output_filename, {'vectors': final_stacked_vectors, 'params': final_param_values})
+            print(f"Saved {output_filename}.")
+        else:
+            print(f"{output_filename} exists ALREADY!")
+    else:
+        print(f"No vectors to save for {active_param}.")
