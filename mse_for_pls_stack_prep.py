@@ -175,7 +175,7 @@ for active_param in ['G', 'Jn', 'Ji', 'Wp']:
     # And each of those items is a list of 808 vectors, each vector being 40 items long
     flattened_vectors = [flattened_vector_1, flattened_vector_2, flattened_vector_3, flattened_vector_4]
 
-    for i, flattened_vector in enumerate(flattered_vectors):
+    for i, flattened_vector in enumerate(flattened_vectors):
     # You can now pass flattened_vectors and flattened_params to your plotting function
         plot_entropy_values(active_param, flattened_vector, flattened_params,i+1)
 
