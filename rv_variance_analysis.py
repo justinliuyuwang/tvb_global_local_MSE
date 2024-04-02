@@ -65,11 +65,16 @@ rois = ['ROI_0', 'ROI_1', 'ROI_2', 'ROI_3']
 
 # Step 4: Adjusted to print correlation and p-value, and create/save heatmaps
 def print_correlation(df, parameter, rois):
+    # Filter the DataFrame to include rows where "noise" is between 0.0001 and 0.001
+    filtered_df = df[(df["noise"] >= 0.0003) & (df["noise"] <= 0.0007)]
+    
     for roi in rois:
         for var_type in ['r_var', 'v_var']:
             value_col = f'{roi}_{var_type}'
-            correlation, p_value = pearsonr(df[parameter], df[value_col])
+            # Perform correlation on the filtered DataFrame
+            correlation, p_value = pearsonr(filtered_df[parameter], filtered_df[value_col])
             print(f'Comparing {parameter} with {value_col}: Correlation = {correlation:.3f}, p-value = {p_value:.3g}')
+
 
 
 # Adjusted Step 4 to include filtering
