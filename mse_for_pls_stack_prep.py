@@ -42,6 +42,32 @@ def read_params_from_log(log_file_path, active_param, noise_value, default_value
                         parameter_values.add(param_value)
     return sorted(parameter_values)
 
+def plot_entropy_values(active_param, all_vectors, all_params):
+    # Combine the vectors and params for sorting
+    combined = list(zip(all_vectors, all_params))
+    # Sort by parameter value
+    combined_sorted = sorted(combined, key=lambda x: x[1])
+    # Unpack them back into sorted lists
+    all_vectors_sorted, all_params_sorted = zip(*combined_sorted)
+    
+    # Now, all_vectors_sorted and all_params_sorted are sorted by the parameter value
+    colors = np.linspace(0, 1, len(all_params_sorted))
+    cmap = mcolors.LinearSegmentedColormap.from_list("", ["blue", "red"])
+    
+    plt.figure(figsize=(10, 6))
+    for i, vectors in enumerate(all_vectors_sorted):
+        color = cmap(colors[i])
+        # You might need to adjust the indexing based on how your entropy values are structured
+        plt.plot(vectors.mean(axis=0), color=color, label=f'{format(active_param)}={all_params_sorted[i]:.4f}')
+    
+    plt.title(f'MSE for Varying {active_param}')
+    plt.xlabel('Time Scale')
+    plt.ylabel('Entropy Value')
+    plt.legend(title=active_param, bbox_to_anchor=(1.05, 1), loc='upper left', fontsize='small')
+    plt.tight_layout()
+    plt.savefig(f"{active_param}_MSE_change.png", bbox_inches='tight')
+
+    
 # Function to load vectors using exact file matching
 def load_vectors(directory, active_param, parameter_values, noise_seed):
     vectors = []
@@ -69,9 +95,9 @@ def load_vectors(directory, active_param, parameter_values, noise_seed):
     if vectors:
         # return np.vstack(vectors), np.array(parameter_values)
 
-        return np.vstack(vectors), np.vstack(np.array(parameter_values))
+        return np.vstack(vectors), np.vstack(np.array(parameter_values)),vectors, parameter_values
     else:
-        return np.empty((0,)), np.array([])
+        return np.empty((0,)), np.array([]),np.empty((0,)), np.array([])
         print("NO VECTORS")
 
 # Read noise seeds from the log file to consider all combinations
@@ -88,15 +114,18 @@ noise_seeds = [1,2,3,4,5,6,7,8] #read_noise_seeds(log_file_path)
 
 all_vectors = {}
 all_params = {}
-
+all_vectors1 = []
+all_params1 = []
 for active_param in ['G', 'Jn', 'Ji', 'Wp']:
     all_vectors[active_param] = []
     all_params[active_param] = []
     
     for noise_seed in noise_seeds:
         parameter_values = read_params_from_log(log_file_path, active_param, noise_value, default_values)
-        stacked_vectors, param_values = load_vectors(directory, active_param, parameter_values, noise_seed)
-
+        stacked_vectors, param_values,vectors, params = load_vectors(directory, active_param, parameter_values, noise_seed)
+        if vectors:
+            all_vectors1.extend(vectors)
+            all_params1.extend(params)
         if stacked_vectors.size > 0:
             all_vectors[active_param].append(stacked_vectors)
             for i,item in enumerate(parameter_values):
@@ -104,7 +133,9 @@ for active_param in ['G', 'Jn', 'Ji', 'Wp']:
             all_params[active_param].extend(parameter_values)  # Assuming parameter_values is a list of values for each vector
         else:
             print(f"No vectors found for varying {active_param} with noise={noise_value}, noise_seed={noise_seed}, and default values for other parameters.")
-
+    
+    plot_entropy_values(active_param, all_vectors1, [float(param) for param in all_params1])
+    
     # After processing all noise seeds, vertically stack the vectors and parameter values
     if all_vectors[active_param]:
         final_stacked_vectors = np.vstack(all_vectors[active_param])
