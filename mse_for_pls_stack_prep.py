@@ -76,7 +76,7 @@ def plot_entropy_values(active_param, all_vectors, all_params,ROI):
     colors = np.linspace(0, 1, len(averaged_vectors))
     cmap = mcolors.LinearSegmentedColormap.from_list("", ["blue", "red"])
     
-    plt.figure(figsize=(10, 24))
+    plt.figure(figsize=(10, 15))
     for i, vector in enumerate(averaged_vectors):
         color = plt.cm.viridis(colors[i])
         plt.plot(vector, color=color, alpha=0.5, label=f'{active_param}={averaged_params[i]:.4f}')
@@ -160,11 +160,20 @@ for active_param in ['G', 'Jn', 'Ji', 'Wp']:
     flattened_vector_2 = []
     flattened_vector_3 = []
     flattened_vector_4 = []
-    
-    # Split each vector and distribute the parts
+
     for vector in flattened_vectors:
-        part_1, part_2, part_3, part_4 = vector[:40], vector[40:80], vector[80:120], vector[120:]
+        part_1, part_2, part_3, part_4 = [], [], [], []
         
+        for i, value in enumerate(vector):
+            if i % 4 == 0:
+                part_1.append(value)
+            elif i % 4 == 1:
+                part_2.append(value)
+            elif i % 4 == 2:
+                part_3.append(value)
+            else:
+                part_4.append(value)
+    
         flattened_vector_1.append(part_1)
         flattened_vector_2.append(part_2)
         flattened_vector_3.append(part_3)
