@@ -3,6 +3,35 @@ import os
 from scipy.io import loadmat, savemat
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
+from matplotlib.animation import FuncAnimation
+import os
+
+def plot_entropy_values_and_create_gif(active_param, all_vectors, all_params, ROI):
+    # Setup the figure and axis for the plot
+    fig, ax = plt.subplots(figsize=(10, 7))
+    ax.set_title(f'MSE for Varying {active_param}')
+    ax.set_xlabel('Time Scale')
+    ax.set_ylabel('Entropy Value')
+    
+    # Function to update the plot for each frame
+    def update(frame):
+        ax.clear()
+        vector = all_vectors[frame]
+        param = all_params[frame]
+        ax.plot(vector, color='black')
+        ax.set_title(f'MSE for Varying {active_param} - {active_param}={param:.4f}')
+        ax.set_xlabel('Time Scale')
+        ax.set_ylabel('Entropy Value')
+    
+    # Creating animation
+    anim = FuncAnimation(fig, update, frames=len(all_vectors), interval=500)
+    
+    # Save the animation as a GIF
+    gif_path = f"{active_param}_ROI-{ROI}_MSE_change.gif"
+    anim.save(gif_path, writer='imagemagick')
+    
+    plt.close(fig)
+    
 # Define the directory containing the .mat files and the log file
 directory = '/home/jwangbay/scratch/nadeen/final/final/pse_img/'
 log_file_path = '/home/jwangbay/scratch/nadeen/final/final/log/params.txt'
@@ -187,7 +216,7 @@ for active_param in ['G', 'Jn', 'Ji', 'Wp']:
     for i, flattened_vector in enumerate(flattened_vectors):
     # You can now pass flattened_vectors and flattened_params to your plotting function
         plot_entropy_values(active_param, flattened_vector, flattened_params,i+1)
-
+        plot_entropy_values_and_create_gif(active_param, flattened_vector, flattened_params,i+1)
     # After processing all noise seeds, vertically stack the vectors and parameter values
     if all_vectors[active_param]:
         final_stacked_vectors = np.vstack(all_vectors[active_param])
