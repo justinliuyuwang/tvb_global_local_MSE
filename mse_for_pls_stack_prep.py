@@ -177,7 +177,7 @@ for active_param in ['G', 'Jn', 'Ji', 'Wp']:
 
     for i, flattened_vector in enumerate(flattered_vectors):
     # You can now pass flattened_vectors and flattened_params to your plotting function
-        plot_entropy_values(active_param, flattened_vectors, flattened_params,i+1)
+        plot_entropy_values(active_param, flattened_vector, flattened_params,i+1)
 
     # After processing all noise seeds, vertically stack the vectors and parameter values
     if all_vectors[active_param]:
