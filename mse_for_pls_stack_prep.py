@@ -1,6 +1,7 @@
 import numpy as np
 import os
 from scipy.io import loadmat, savemat
+import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 # Define the directory containing the .mat files and the log file
 directory = '/home/jwangbay/scratch/nadeen/final/final/pse_img/'
