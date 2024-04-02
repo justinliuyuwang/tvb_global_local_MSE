@@ -59,12 +59,11 @@ def plot_entropy_values(active_param, all_vectors, all_params):
     for i, vectors in enumerate(all_vectors_sorted):
         color = cmap(colors[i])
         # You might need to adjust the indexing based on how your entropy values are structured
-        plt.plot(vectors.mean(axis=0), color=color, label=f'{format(active_param)}={all_params_sorted[i]:.4f}')
+        plt.plot(vectors.mean(axis=0), color=color, alpha=0.5, label=f'{format(active_param)}={all_params_sorted[i]:.4f}')
     
     plt.title(f'MSE for Varying {active_param}')
     plt.xlabel('Time Scale')
     plt.ylabel('Entropy Value')
-    plt.legend(title=active_param, bbox_to_anchor=(1.05, 1), loc='upper left', fontsize='small')
     plt.tight_layout()
     plt.savefig(f"{active_param}_MSE_change.png", bbox_inches='tight')
 
