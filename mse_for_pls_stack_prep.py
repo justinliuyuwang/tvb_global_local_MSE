@@ -43,7 +43,7 @@ def read_params_from_log(log_file_path, active_param, noise_value, default_value
                         parameter_values.add(param_value)
     return sorted(parameter_values)
 
-def plot_entropy_values(active_param, all_vectors, all_params):
+def plot_entropy_values(active_param, all_vectors, all_params,ROI):
     # Combine the vectors and params for sorting
     combined = list(zip(all_vectors, all_params))
     # Sort by parameter value
@@ -85,7 +85,7 @@ def plot_entropy_values(active_param, all_vectors, all_params):
     plt.xlabel('Time Scale')
     plt.ylabel('Entropy Value')
     plt.tight_layout()
-    plt.savefig(f"{active_param}_MSE_change.png", bbox_inches='tight')
+    plt.savefig(f"{active_param}_ROI-{ROI}_MSE_change.png", bbox_inches='tight')
 
     
 # Function to load vectors using exact file matching
@@ -151,15 +151,33 @@ for active_param in ['G', 'Jn', 'Ji', 'Wp']:
             print(f"No vectors found for varying {active_param} with noise={noise_value}, noise_seed={noise_seed}, and default values for other parameters.")
 
     flattened_vectors = [vector.ravel() for vector_set in all_vectors[active_param] for vector in vector_set]
-
+    
     # Ensure all_params[active_param] is a flat list of parameter values
     flattened_params = all_params[active_param]
     
-    # Now flattened_vectors and flattened_params should have matching lengths and order
-    print(len(flattened_vectors), len(flattened_params))
+    # Initialize lists to hold the 4 new flattened vectors
+    flattened_vector_1 = []
+    flattened_vector_2 = []
+    flattened_vector_3 = []
+    flattened_vector_4 = []
     
+    # Split each vector and distribute the parts
+    for vector in flattened_vectors:
+        part_1, part_2, part_3, part_4 = vector[:40], vector[40:80], vector[80:120], vector[120:]
+        
+        flattened_vector_1.append(part_1)
+        flattened_vector_2.append(part_2)
+        flattened_vector_3.append(part_3)
+        flattened_vector_4.append(part_4)
+    
+    # If you want these in a 3D structure (list of lists of lists)
+    # Where the outer list contains 4 items (one for each new flattened vector),
+    # And each of those items is a list of 808 vectors, each vector being 40 items long
+    flattened_vectors = [flattened_vector_1, flattened_vector_2, flattened_vector_3, flattened_vector_4]
+
+    for i, flattened_vector in enumerate(flattered_vectors):
     # You can now pass flattened_vectors and flattened_params to your plotting function
-    plot_entropy_values(active_param, flattened_vectors, flattened_params)
+        plot_entropy_values(active_param, flattened_vectors, flattened_params,i+1)
 
     # After processing all noise seeds, vertically stack the vectors and parameter values
     if all_vectors[active_param]:
