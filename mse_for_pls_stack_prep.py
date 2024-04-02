@@ -6,32 +6,41 @@ import matplotlib.colors as mcolors
 from matplotlib.animation import FuncAnimation
 import os
 
+from matplotlib.animation import FuncAnimation
+import matplotlib.pyplot as plt
+
 def plot_entropy_values_and_create_gif(active_param, all_vectors, all_params, ROI):
     # Setup the figure and axis for the plot
-    fig, ax = plt.subplots(figsize=(10, 7))
+    fig, ax = plt.subplots(figsize=(7, 7))
     ax.set_title(f'MSE for Varying {active_param}')
     ax.set_xlabel('Time Scale')
     ax.set_ylabel('Entropy Value')
     
-    # Function to update the plot for each frame
-    def update(frame):
+    # Adjust indices to plot every 10th vector
+    indices_to_plot = range(0, len(all_vectors), 10)
+
+    # Function to update the plot for each selected frame
+    def update(frame_index):
+        # Clear the axis to prepare for the next frame
         ax.clear()
-        vector = all_vectors[frame]
-        param = all_params[frame]
+        # Use the frame_index to get the actual index from the subset
+        vector = all_vectors[frame_index]
+        param = all_params[frame_index]
+        # Plot the selected vector
         ax.plot(vector, color='black')
         ax.set_title(f'MSE for Varying {active_param} - {active_param}={param:.4f}')
         ax.set_xlabel('Time Scale')
         ax.set_ylabel('Entropy Value')
     
-    # Creating animation
-    anim = FuncAnimation(fig, update, frames=len(all_vectors), interval=500)
+    # Creating animation using the subset of frames
+    anim = FuncAnimation(fig, update, frames=indices_to_plot, interval=200)
     
     # Save the animation as a GIF
     gif_path = f"{active_param}_ROI-{ROI}_MSE_change.gif"
     anim.save(gif_path, writer='imagemagick')
     
-    plt.close(fig)
-    
+    plt.close(fig)  # Close the figure to prevent it from displaying inline if using a notebook
+    print("done one!")
 # Define the directory containing the .mat files and the log file
 directory = '/home/jwangbay/scratch/nadeen/final/final/pse_img/'
 log_file_path = '/home/jwangbay/scratch/nadeen/final/final/log/params.txt'
