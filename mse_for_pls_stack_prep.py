@@ -50,17 +50,37 @@ def plot_entropy_values(active_param, all_vectors, all_params):
     combined_sorted = sorted(combined, key=lambda x: x[1])
     # Unpack them back into sorted lists
     all_vectors_sorted, all_params_sorted = zip(*combined_sorted)
+
+    # Determine the number of vectors per group for 20 groups
+    n_groups = 20
+    group_size = len(all_vectors_sorted) // n_groups
     
-    # Now, all_vectors_sorted and all_params_sorted are sorted by the parameter value
-    colors = np.linspace(0, 1, len(all_params_sorted))
+    # Split all_vectors_sorted into 20 groups and average each
+    averaged_vectors = []
+    averaged_params = []
+    for i in range(n_groups):
+        start_idx = i * group_size
+        end_idx = (i + 1) * group_size if i < n_groups - 1 else len(all_vectors_sorted)
+        group_vectors = np.array(all_vectors_sorted[start_idx:end_idx])
+        group_params = all_params_sorted[start_idx:end_idx]
+        
+        # Calculate the mean vector for the group
+        averaged_vector = np.mean(group_vectors, axis=0)
+        averaged_vectors.append(averaged_vector)
+        
+        # Optionally, calculate an average or representative parameter value for the group
+        averaged_param = np.mean(group_params)
+        averaged_params.append(averaged_param)
+
+    # Now, plot the averaged vectors
+    colors = np.linspace(0, 1, len(averaged_vectors))
     cmap = mcolors.LinearSegmentedColormap.from_list("", ["blue", "red"])
     
-    plt.figure(figsize=(10, 6))
-    for i, vectors in enumerate(all_vectors_sorted):
-        color = cmap(colors[i])
-        # You might need to adjust the indexing based on how your entropy values are structured
-        plt.plot(vectors.mean(axis=0), color=color, alpha=0.5, label=f'{format(active_param)}={all_params_sorted[i]:.4f}')
-    
+    plt.figure(figsize=(10, 24))
+    for i, vector in enumerate(averaged_vectors):
+        color = plt.cm.viridis(colors[i])
+        plt.plot(vector, color=color, alpha=0.5, label=f'{active_param}={averaged_params[i]:.4f}')
+
     plt.title(f'MSE for Varying {active_param}')
     plt.xlabel('Time Scale')
     plt.ylabel('Entropy Value')
@@ -95,7 +115,7 @@ def load_vectors(directory, active_param, parameter_values, noise_seed):
     if vectors:
         # return np.vstack(vectors), np.array(parameter_values)
 
-        return np.vstack(vectors), np.vstack(np.array(parameter_values)),vectors, parameter_values
+        return np.vstack(vectors), np.vstack(np.array(parameter_values))
     else:
         return np.empty((0,)), np.array([]),np.empty((0,)), np.array([])
         print("NO VECTORS")
@@ -114,18 +134,14 @@ noise_seeds = [1,2,3,4,5,6,7,8] #read_noise_seeds(log_file_path)
 
 all_vectors = {}
 all_params = {}
-all_vectors1 = []
-all_params1 = []
 for active_param in ['G', 'Jn', 'Ji', 'Wp']:
     all_vectors[active_param] = []
     all_params[active_param] = []
     
     for noise_seed in noise_seeds:
         parameter_values = read_params_from_log(log_file_path, active_param, noise_value, default_values)
-        stacked_vectors, param_values,vectors, params = load_vectors(directory, active_param, parameter_values, noise_seed)
-        if vectors:
-            all_vectors1.extend(vectors)
-            all_params1.extend(params)
+        stacked_vectors, param_values = load_vectors(directory, active_param, parameter_values, noise_seed)
+
         if stacked_vectors.size > 0:
             all_vectors[active_param].append(stacked_vectors)
             for i,item in enumerate(parameter_values):
@@ -133,9 +149,18 @@ for active_param in ['G', 'Jn', 'Ji', 'Wp']:
             all_params[active_param].extend(parameter_values)  # Assuming parameter_values is a list of values for each vector
         else:
             print(f"No vectors found for varying {active_param} with noise={noise_value}, noise_seed={noise_seed}, and default values for other parameters.")
+
+    flattened_vectors = [vector.ravel() for vector_set in all_vectors[active_param] for vector in vector_set]
+
+    # Ensure all_params[active_param] is a flat list of parameter values
+    flattened_params = all_params[active_param]
     
-    plot_entropy_values(active_param, all_vectors1, [float(param) for param in all_params1])
+    # Now flattened_vectors and flattened_params should have matching lengths and order
+    print(len(flattened_vectors), len(flattened_params))
     
+    # You can now pass flattened_vectors and flattened_params to your plotting function
+    plot_entropy_values(active_param, flattened_vectors, flattened_params)
+
     # After processing all noise seeds, vertically stack the vectors and parameter values
     if all_vectors[active_param]:
         final_stacked_vectors = np.vstack(all_vectors[active_param])
