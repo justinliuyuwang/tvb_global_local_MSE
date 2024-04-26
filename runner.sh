@@ -114,6 +114,8 @@ for ((noise_seed=1; noise_seed<=10; noise_seed++)); do
     for Wp in "${Wp_values[@]}"; do
         echo "$my_noise $default_G $default_Jn $default_Ji $Wp" "$noise_seed" >> "$paramfile"
     done
+
+    echo "$my_noise $default_G $default_Jn $default_Ji $default_Wp" "$noise_seed" >> "$paramfile"
 done
 done
 # # Varying Mi
