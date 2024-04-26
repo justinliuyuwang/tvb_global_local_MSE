@@ -64,9 +64,13 @@ rois = ['ROI_0', 'ROI_1', 'ROI_2', 'ROI_3']
 
 
 # Step 4: Adjusted to print correlation and p-value, and create/save heatmaps
-def print_correlation(df, parameter, rois):
+def print_correlation(df, parameter, rois, noise_flag):
+    if noise_flag==1:
+        filtered_df = df[(df["G"] ==default_G) & (df["Jn"] == default_Jn) & (df["Ji"] == default_Ji) & (df["Wp"] == default_Wp)]
+    
     # Filter the DataFrame to include rows where "noise" is between 0.0001 and 0.001
-    filtered_df = df[(df["noise"] >= 0.0003) & (df["noise"] <= 0.0007)]
+    else:
+        filtered_df = df[(df["noise"] >= 0.0003) & (df["noise"] <= 0.0007)]
     
     for roi in rois:
         for var_type in ['r_var', 'v_var']:
@@ -81,9 +85,14 @@ def print_correlation(df, parameter, rois):
 for parameter in ['G', 'Jn', 'Ji', 'Wp']:
     print(f'\nCorrelation and p-value for parameter: {parameter}')
     filtered_df = filter_for_defaults(df, parameter)  # Filter DataFrame based on parameter
-    print_correlation(filtered_df, parameter, rois)
+    print_correlation(filtered_df, parameter, rois, 0)
     create_roi_heatmaps(filtered_df, 'noise', parameter, rois)
 
+for parameter in ['noise']:
+    print(f'\nCorrelation and p-value for parameter: {parameter}')
+    filtered_df = filter_for_defaults(df, parameter)  # Filter DataFrame based on parameter
+    print_correlation(filtered_df, parameter, rois, 1)
+    
 # Adjusted Step 3 to create and save heatmaps for each noiseseed and each ROI's r and v variances
 for seed in noiseseeds:
     df_seed = df[df['noise_seed'] == seed]
