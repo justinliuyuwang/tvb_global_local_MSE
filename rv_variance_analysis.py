@@ -25,6 +25,8 @@ def filter_for_defaults(df, parameter):
         df = df[df['Ji'] == default_Ji]
     if parameter != 'Wp':
         df = df[df['Wp'] == default_Wp]
+    if parameter != 'G':
+        df = df[df['G'] == default_G]
     return df
 
 # Step 2: Define a function to create and save a heatmap
@@ -67,11 +69,9 @@ rois = ['ROI_0', 'ROI_1', 'ROI_2', 'ROI_3']
 def print_correlation(df, parameter, rois, noise_flag):
     if noise_flag==1:
         filtered_df = df[(df["G"] ==default_G) & (df["Jn"] == default_Jn) & (df["Ji"] == default_Ji) & (df["Wp"] == default_Wp)]
-    
     # Filter the DataFrame to include rows where "noise" is between 0.0001 and 0.001
     else:
         filtered_df = df[(df["noise"] >= 0.0003) & (df["noise"] <= 0.0007)]
-    
     for roi in rois:
         for var_type in ['r_var', 'v_var']:
             value_col = f'{roi}_{var_type}'
